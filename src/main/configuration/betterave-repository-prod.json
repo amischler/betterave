@@ -1,0 +1,10 @@
+{
+  "name": "betterave-repository-prod",
+  "node-types": [
+    "conf/betterave.cnd"
+  ],
+  "storage": {
+    "cacheConfiguration": "conf/betterave-cache-prod.xml",
+    "cacheName": "betterave-cache-prod"
+  }
+}

@@ -30,6 +30,15 @@
 
     <packaging>wisdom</packaging>
 
+    <properties>
+        <wisdom.version>0.9.1</wisdom.version>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        <modeshape.version>4.2.0.Final</modeshape.version>
+        <jcrom.version>2.1.0</jcrom.version>
+        <wisdom.jcr.version>0.1.0</wisdom.jcr.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.wisdom-framework</groupId>
@@ -56,6 +65,12 @@
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
             <version>2.1.0-2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.jasypt</artifactId>
+            <version>1.9.2_1</version>
         </dependency>
 
         <!-- Test dependencies -->
@@ -91,12 +106,32 @@
         <dependency>
             <groupId>org.wisdom-framework</groupId>
             <artifactId>wisdom-monitor</artifactId>
-            <version>0.9.1</version>
+            <version>${wisdom.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wisdom-framework</groupId>
             <artifactId>documentation</artifactId>
-            <version>0.9.1</version>
+            <version>${wisdom.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wisdom-framework.jcr</groupId>
+            <artifactId>wisdom-jcr-core</artifactId>
+            <version>${wisdom.jcr.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wisdom-framework.jcr</groupId>
+            <artifactId>wisdom-modeshape</artifactId>
+            <version>${wisdom.jcr.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jcrom</groupId>
+            <artifactId>jcrom</artifactId>
+            <version>${jcrom.version}</version>
         </dependency>
     </dependencies>
 
@@ -106,7 +141,7 @@
                 <!-- Define all the versions of the dependencies provided by Wisdom -->
                 <groupId>org.wisdom-framework</groupId>
                 <artifactId>wisdom-bom</artifactId>
-                <version>0.9.1</version>
+                <version>${wisdom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -118,8 +153,21 @@
             <plugin>
                 <groupId>org.wisdom-framework</groupId>
                 <artifactId>wisdom-maven-plugin</artifactId>
-                <version>0.9.1</version>
+                <version>${wisdom.version}</version>
                 <extensions>true</extensions>
+                <configuration>
+                    <libraries>
+                        <includes>
+                            <!-- wisdom-jcr -->
+                            <include>org.modeshape:modeshape-jcr</include>
+                            <include>joda-time:joda-time</include>
+                            <include>org.jcrom:jcrom</include>
+                            <!-- /wisdom-jcr -->
+                        </includes>
+                        <excludeFromApplication>true</excludeFromApplication>
+                    </libraries>
+                    <disableDistributionPackaging>true</disableDistributionPackaging>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -142,6 +190,15 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <additionalClasspathElements>
+                        <additionalClasspathElement>${basedir}/target/wisdom</additionalClasspathElement>
+                    </additionalClasspathElements>
+                </configuration>
             </plugin>
         </plugins>
     </build>
