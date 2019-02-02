@@ -200,6 +200,21 @@
                     </additionalClasspathElements>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.wisdom-framework</groupId>
+                <artifactId>wisdom-ractivejs-maven-plugin</artifactId>
+                <version>0.1.4</version>
+                <executions>
+                    <execution>
+                        <id>compile-ractivejs-files</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile-ractivejs</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
