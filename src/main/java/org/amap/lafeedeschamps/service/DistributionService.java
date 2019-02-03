@@ -1,10 +1,13 @@
 package org.amap.lafeedeschamps.service;
 
 import org.amap.lafeedeschamps.service.dto.DistributionDTO;
-
+import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -34,7 +37,7 @@ public interface DistributionService {
      * @return the list of entities
      */
     Page<DistributionDTO> findAllWithEagerRelationships(Pageable pageable);
-    
+
     /**
      * Get the "id" distribution.
      *
@@ -49,4 +52,6 @@ public interface DistributionService {
      * @param id the id of the entity
      */
     void delete(Long id);
+
+    Page<DistributionDTO> findByDates(LocalDate fromDate, LocalDate toDate, Pageable pageable);
 }

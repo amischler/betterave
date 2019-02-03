@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,7 +93,8 @@ public class DistributionResource {
      * @return the ResponseEntity with status 200 (OK) and the list of distributions in body
      */
     @GetMapping("/distributions")
-    public ResponseEntity<List<DistributionDTO>> getAllDistributions(Pageable pageable, @RequestParam(required = false, defaultValue = "false") boolean eagerload) {
+    public ResponseEntity<List<DistributionDTO>> getAllDistributions(Pageable pageable,
+                                                                     @RequestParam(required = false, defaultValue = "false") boolean eagerload) {
         log.debug("REST request to get a page of Distributions");
         Page<DistributionDTO> page;
         if (eagerload) {
@@ -100,6 +103,27 @@ public class DistributionResource {
             page = distributionService.findAll(pageable);
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, String.format("/api/distributions?eagerload=%b", eagerload));
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * GET  /distributions : get a page of Distribution between the fromDate and toDate.
+     *
+     * @param fromDate the start of the time period of Distribution to get
+     * @param toDate   the end of the time period of Distribution to get
+     * @param pageable the pagination information
+     * @return the ResponseEntity with status 200 (OK) and the list of AuditEvents in body
+     */
+    @GetMapping(path = "/distributions", params = {"fromDate", "toDate"})
+    public ResponseEntity<List<DistributionDTO>> getByDates(
+        @RequestParam(value = "fromDate") LocalDate fromDate,
+        @RequestParam(value = "toDate") LocalDate toDate,
+        Pageable pageable) {
+        Page<DistributionDTO> page = distributionService.findByDates(
+            fromDate.atStartOfDay(ZoneId.systemDefault()).toLocalDate(),
+            toDate.atStartOfDay(ZoneId.systemDefault()).plusDays(1).toLocalDate(),
+            pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/distributions");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
@@ -181,4 +205,5 @@ public class DistributionResource {
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
+
 }

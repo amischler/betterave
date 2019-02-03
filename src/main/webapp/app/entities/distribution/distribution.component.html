@@ -1,7 +1,7 @@
 <div>
     <h2 id="page-heading">
         <span>Distributions</span>
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-distribution" [routerLink]="['/distribution/new']">
+        <button *jhiHasAnyAuthority="'ROLE_ADMIN'" id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-distribution" [routerLink]="['/distribution/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span >
             Create new Distribution
@@ -10,25 +10,41 @@
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
+    <div class="row">
+        <div class="col-md-5">
+            <h4>Rechercher par date</h4>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Du</span>
+                </div>
+                <input type="date" class="form-control" name="start" [(ngModel)]="fromDate" (ngModelChange)="transition()" required/>
+
+                <div class="input-group-append">
+                    <span class="input-group-text">Au</span>
+                </div>
+                <input type="date" class="form-control" name="end" [(ngModel)]="toDate" (ngModelChange)="transition()" required/>
+            </div>
+        </div>
+    </div>
     <div class="table-responsive" *ngIf="distributions">
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
-            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th *jhiHasAnyAuthority="'ROLE_ADMIN'" jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="date"><span>Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="users"><span>Amapiens</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="text"><span>Text</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="placeName"><span>Place</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="text"><span>Détails</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="placeName"><span>Lieu de distribution</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
             <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
             <tr *ngFor="let distribution of distributions ;trackBy: trackId">
-                <td><a [routerLink]="['/distribution', distribution.id, 'view' ]">{{distribution.id}}</a></td>
+                <td *jhiHasAnyAuthority="'ROLE_ADMIN'"><a [routerLink]="['/distribution', distribution.id, 'view' ]">{{distribution.id}}</a></td>
                 <td>{{distribution.date | date:'mediumDate'}}</td>
                 <td>
                     <span *ngFor="let users of distribution.users; let last = last">
-                        {{users.login}}{{last ? '' : ', '}}
+                        {{users.firstName}} {{users.lastName}}{{last ? '' : ', '}}
                     </span>
                 </td>
                 <td>{{distribution.text}}</td>
@@ -40,14 +56,14 @@
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
-                                *ngIf = "!isSubscribed(distribution)"
+                                *ngIf = "canSubscribe(distribution)"
                                 (click)="subscribe(distribution.id)"
                                 class="btn btn-primary btn-sm">
                             <fa-icon [icon]="'check'"></fa-icon>
                             <span class="d-none d-md-inline">S'inscrire</span>
                         </button>
                         <button type="submit"
-                                *ngIf = "isSubscribed(distribution)"
+                                *ngIf = "canUnsubscribe(distribution)"
                                 (click)="unsubscribe(distribution.id)"
                                 class="btn btn-danger btn-sm">
                             <fa-icon [icon]="'times'"></fa-icon>
@@ -59,13 +75,13 @@
                             <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline">View</span>
                         </button>
-                        <button type="submit"
+                        <button *jhiHasAnyAuthority="'ROLE_ADMIN'" type="submit"
                                 [routerLink]="['/distribution', distribution.id, 'edit']"
                                 class="btn btn-primary btn-sm">
                             <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
-                        <button type="submit"
+                        <button *jhiHasAnyAuthority="'ROLE_ADMIN'" type="submit"
                                 [routerLink]="['/', 'distribution', { outlets: { popup: distribution.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"

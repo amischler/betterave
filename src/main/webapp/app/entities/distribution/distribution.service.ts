@@ -40,6 +40,8 @@ export class DistributionService {
 
     query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
+        options.set('fromDate', req.fromDate);
+        options.set('toDate', req.toDate);
         return this.http
             .get<IDistribution[]>(this.resourceUrl, { params: options, observe: 'response' })
             .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));

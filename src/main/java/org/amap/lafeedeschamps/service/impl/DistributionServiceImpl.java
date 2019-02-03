@@ -1,18 +1,19 @@
 package org.amap.lafeedeschamps.service.impl;
 
-import org.amap.lafeedeschamps.service.DistributionService;
 import org.amap.lafeedeschamps.domain.Distribution;
 import org.amap.lafeedeschamps.repository.DistributionRepository;
+import org.amap.lafeedeschamps.service.DistributionService;
 import org.amap.lafeedeschamps.service.dto.DistributionDTO;
 import org.amap.lafeedeschamps.service.mapper.DistributionMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Optional;
 
 /**
@@ -69,7 +70,7 @@ public class DistributionServiceImpl implements DistributionService {
     public Page<DistributionDTO> findAllWithEagerRelationships(Pageable pageable) {
         return distributionRepository.findAllWithEagerRelationships(pageable).map(distributionMapper::toDto);
     }
-    
+
 
     /**
      * Get one distribution by id.
@@ -92,6 +93,16 @@ public class DistributionServiceImpl implements DistributionService {
      */
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete Distribution : {}", id);        distributionRepository.deleteById(id);
+        log.debug("Request to delete Distribution : {}", id);
+        distributionRepository.deleteById(id);
     }
+
+    @Override
+    public Page<DistributionDTO> findByDates(LocalDate fromDate, LocalDate toDate, Pageable pageable) {
+        return distributionRepository.findAllByDateBetweenOrderByDate(fromDate, toDate, pageable)
+            .map(distributionMapper::toDto);
+
+    }
+
+
 }

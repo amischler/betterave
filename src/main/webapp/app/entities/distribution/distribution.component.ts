@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
@@ -24,13 +25,16 @@ export class DistributionComponent implements OnInit, OnDestroy {
     predicate: any;
     reverse: any;
     totalItems: number;
+    fromDate: string;
+    toDate: string;
 
     constructor(
         protected distributionService: DistributionService,
         protected jhiAlertService: JhiAlertService,
         protected eventManager: JhiEventManager,
         protected parseLinks: JhiParseLinks,
-        protected accountService: AccountService
+        protected accountService: AccountService,
+        private datePipe: DatePipe
     ) {
         this.distributions = [];
         this.itemsPerPage = ITEMS_PER_PAGE;
@@ -47,7 +51,9 @@ export class DistributionComponent implements OnInit, OnDestroy {
             .query({
                 page: this.page,
                 size: this.itemsPerPage,
-                sort: this.sort()
+                sort: this.sort(),
+                fromDate: this.fromDate,
+                toDate: this.toDate
             })
             .subscribe(
                 (res: HttpResponse<IDistribution[]>) => this.paginateDistributions(res.body, res.headers),
@@ -67,6 +73,8 @@ export class DistributionComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.today();
+        this.nextYear();
         this.loadAll();
         this.accountService.identity().then(account => {
             this.currentAccount = account;
@@ -128,9 +136,38 @@ export class DistributionComponent implements OnInit, OnDestroy {
         );
     }
 
-    isSubscribed(distribution) {
-        return distribution.users.some(user => {
-            return user.login === this.currentAccount.login;
-        });
+    canSubscribe(distribution) {
+        return (
+            !distribution.users.some(user => {
+                return user.login === this.currentAccount.login;
+            }) && distribution.date > new Date()
+        );
+    }
+
+    canUnsubscribe(distribution) {
+        return (
+            distribution.users.some(user => {
+                return user.login === this.currentAccount.login;
+            }) && distribution.date > new Date()
+        );
+    }
+
+    today() {
+        const dateFormat = 'yyyy-MM-dd';
+        // Today
+        const today: Date = new Date();
+        const date = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        this.fromDate = this.datePipe.transform(date, dateFormat);
+    }
+
+    nextYear() {
+        const dateFormat = 'yyyy-MM-dd';
+        let fromDate: Date = new Date();
+        fromDate = new Date(fromDate.getFullYear() + 1, fromDate.getMonth(), fromDate.getDate());
+        this.toDate = this.datePipe.transform(fromDate, dateFormat);
+    }
+
+    transition() {
+        this.reset();
     }
 }
