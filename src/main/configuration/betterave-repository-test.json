@@ -1,6 +1,0 @@
-{
-  "name": "betterave-repository-test",
-  "node-types": [
-    "conf/betterave.cnd"
-  ]
-}
