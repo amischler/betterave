@@ -1,13 +1,14 @@
 package org.amap.lafeedeschamps.web.rest;
-import org.amap.lafeedeschamps.domain.Distribution;
+
+import io.github.jhipster.web.util.ResponseUtil;
+import org.amap.lafeedeschamps.domain.User;
 import org.amap.lafeedeschamps.service.DistributionService;
 import org.amap.lafeedeschamps.service.UserService;
+import org.amap.lafeedeschamps.service.dto.DistributionDTO;
 import org.amap.lafeedeschamps.service.dto.UserDTO;
 import org.amap.lafeedeschamps.web.rest.errors.BadRequestAlertException;
 import org.amap.lafeedeschamps.web.rest.util.HeaderUtil;
 import org.amap.lafeedeschamps.web.rest.util.PaginationUtil;
-import org.amap.lafeedeschamps.service.dto.DistributionDTO;
-import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -86,7 +86,7 @@ public class DistributionResource {
     /**
      * GET  /distributions : get all the distributions.
      *
-     * @param pageable the pagination information
+     * @param pageable  the pagination information
      * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many)
      * @return the ResponseEntity with status 200 (OK) and the list of distributions in body
      */
@@ -141,11 +141,41 @@ public class DistributionResource {
         Optional<DistributionDTO> optionalDistribution = distributionService.findOne(id);
         if (optionalDistribution.isPresent()) {
             DistributionDTO distribution = optionalDistribution.get();
-            userService.getUserWithAuthorities()
-                .ifPresent(user -> distribution.getUsers().add(new UserDTO(user)));
-            distributionService.save(distribution);
+            Optional<User> user = userService.getUserWithAuthorities();
+            if (user.isPresent()) {
+                distribution.getUsers().add(new UserDTO(user.get()));
+            }
+            distribution = distributionService.save(distribution);
             return ResponseEntity.ok()
                 .headers(HeaderUtil.createAlert("Merci pour votre inscription à la distribution !",
+                    distribution.getId().toString()))
+                .body(distribution);
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * DELETEu /distributions/:id/subscribe : subscribes to the "id" distribution.
+     *
+     * @param id the id of the distribution to subscribe to
+     * @return the ResponseEntity with status 200 (OK)
+     */
+    @DeleteMapping("/distributions/{id}/subscribe")
+    public ResponseEntity<DistributionDTO> unsubscribeFromDistribution(@PathVariable Long id) {
+        log.debug("REST request to unsubscribe from Distribution : {}", id);
+        Optional<DistributionDTO> optionalDistribution = distributionService.findOne(id);
+        if (optionalDistribution.isPresent()) {
+            DistributionDTO distribution = optionalDistribution.get();
+            Optional<User> user = userService.getUserWithAuthorities();
+            if (user.isPresent()) {
+                Optional<UserDTO> toRemove = distribution.getUsers().stream().filter(u -> u.getLogin().equals(user.get().getLogin())).findFirst();
+                if (toRemove.isPresent()) {
+                    distribution.getUsers().remove(toRemove.get());
+                }
+            }
+            distribution = distributionService.save(distribution);
+            return ResponseEntity.ok()
+                .headers(HeaderUtil.createAlert("Votre désinscription a bien été enregistrée",
                     distribution.getId().toString()))
                 .body(distribution);
         }

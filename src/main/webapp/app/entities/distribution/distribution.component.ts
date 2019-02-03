@@ -116,4 +116,21 @@ export class DistributionComponent implements OnInit, OnDestroy {
             (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
+
+    unsubscribe(distributionId) {
+        this.distributionService.unsubscribe(distributionId).subscribe(
+            (res: HttpResponse<IDistribution[]>) =>
+                this.eventManager.broadcast({
+                    name: 'distributionListModification',
+                    content: 'Unsubscribed from a distribution'
+                }),
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+    }
+
+    isSubscribed(distribution) {
+        return distribution.users.some(user => {
+            return user.login === this.currentAccount.login;
+        });
+    }
 }

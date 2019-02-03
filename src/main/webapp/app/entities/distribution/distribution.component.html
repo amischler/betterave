@@ -26,11 +26,11 @@
             <tr *ngFor="let distribution of distributions ;trackBy: trackId">
                 <td><a [routerLink]="['/distribution', distribution.id, 'view' ]">{{distribution.id}}</a></td>
                 <td>{{distribution.date | date:'mediumDate'}}</td>
-                <dd>
+                <td>
                     <span *ngFor="let users of distribution.users; let last = last">
                         {{users.login}}{{last ? '' : ', '}}
                     </span>
-                </dd>
+                </td>
                 <td>{{distribution.text}}</td>
                 <td>
                     <div *ngIf="distribution.placeId">
@@ -40,10 +40,18 @@
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
+                                *ngIf = "!isSubscribed(distribution)"
                                 (click)="subscribe(distribution.id)"
                                 class="btn btn-primary btn-sm">
                             <fa-icon [icon]="'check'"></fa-icon>
                             <span class="d-none d-md-inline">S'inscrire</span>
+                        </button>
+                        <button type="submit"
+                                *ngIf = "isSubscribed(distribution)"
+                                (click)="unsubscribe(distribution.id)"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Se désinscrire</span>
                         </button>
                         <button type="submit"
                                 [routerLink]="['/distribution', distribution.id, 'view' ]"

@@ -75,4 +75,8 @@ export class DistributionService {
     subscribe(id: number): Observable<HttpResponse<any>> {
         return this.http.get<any>(`${this.resourceUrl}/${id}/subscribe`, { observe: 'response' });
     }
+
+    unsubscribe(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}/subscribe`, { observe: 'response' });
+    }
 }
