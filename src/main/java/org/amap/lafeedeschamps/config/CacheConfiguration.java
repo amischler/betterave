@@ -40,6 +40,11 @@ public class CacheConfiguration {
             cm.createCache(org.amap.lafeedeschamps.domain.User.class.getName() + ".authorities", jcacheConfiguration);
             cm.createCache(org.amap.lafeedeschamps.domain.PersistentToken.class.getName(), jcacheConfiguration);
             cm.createCache(org.amap.lafeedeschamps.domain.User.class.getName() + ".persistentTokens", jcacheConfiguration);
+            cm.createCache(org.amap.lafeedeschamps.domain.DistributionPlace.class.getName(), jcacheConfiguration);
+            cm.createCache(org.amap.lafeedeschamps.domain.Distribution.class.getName(), jcacheConfiguration);
+            cm.createCache(org.amap.lafeedeschamps.domain.Distribution.class.getName() + ".comments", jcacheConfiguration);
+            cm.createCache(org.amap.lafeedeschamps.domain.Distribution.class.getName() + ".users", jcacheConfiguration);
+            cm.createCache(org.amap.lafeedeschamps.domain.Comment.class.getName(), jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }

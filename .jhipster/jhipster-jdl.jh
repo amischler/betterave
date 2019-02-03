@@ -1,0 +1,37 @@
+entity DistributionPlace {
+	name String
+}
+
+entity Distribution {
+	date LocalDate
+    text String
+}
+
+entity Comment {
+	text String
+}
+
+relationship OneToMany {
+	Distribution{comments} to Comment
+}
+
+relationship ManyToOne {
+	Comment{user} to User
+    Distribution{place(name)} to DistributionPlace
+}
+
+relationship ManyToMany {
+	Distribution{users} to User{distributions}
+}
+
+// Set pagination options
+paginate Distribution with infinite-scroll
+
+// Use Data Transfert Objects (DTO)
+dto Distribution, DistributionPlace, Comment with mapstruct
+
+// Set service options to all except few
+service Distribution, DistributionPlace, Comment with serviceImpl
+
+// Set an angular suffix
+// angularSuffix * with mySuffix

@@ -1,0 +1,43 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="distribution">
+            <h2><span>Distribution</span> {{distribution.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Date</span></dt>
+                <dd>
+                    <span>{{distribution.date}}</span>
+                </dd>
+                <dt><span>Text</span></dt>
+                <dd>
+                    <span>{{distribution.text}}</span>
+                </dd>
+                <dt><span>Place</span></dt>
+                <dd>
+                    <div *ngIf="distribution.placeId">
+                        <a [routerLink]="['/distribution-place', distribution.placeId, 'view']">{{distribution.placeName}}</a>
+                    </div>
+                </dd>
+                <dt><span>Users</span></dt>
+                <dd>
+                    <span *ngFor="let users of distribution.users; let last = last">
+                        {{users.login}}{{last ? '' : ', '}}
+                    </span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/distribution', distribution.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

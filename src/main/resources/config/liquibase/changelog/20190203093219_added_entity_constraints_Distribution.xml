@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity Distribution.
+    -->
+    <changeSet id="20190203093219-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="place_id"
+                                 baseTableName="distribution"
+                                 constraintName="fk_distribution_place_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="distribution_place"/>
+
+        <addForeignKeyConstraint baseColumnNames="distribution_id"
+                                 baseTableName="distribution_users"
+                                 constraintName="fk_distribution_users_distribution_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="distribution"/>
+        <addForeignKeyConstraint baseColumnNames="users_id"
+                                 baseTableName="distribution_users"
+                                 constraintName="fk_distribution_users_users_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+        
+    </changeSet>
+</databaseChangeLog>
