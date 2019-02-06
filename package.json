@@ -68,7 +68,7 @@
         "rimraf": "2.6.3",
         "simple-progress-webpack-plugin": "1.1.2",
         "style-loader": "0.23.1",
-        "terser-webpack-plugin": "1.2.1",
+        "terser-webpack-plugin": "1.2.2",
         "thread-loader": "2.1.1",
         "to-string-loader": "1.1.5",
         "ts-loader": "5.3.3",

@@ -41,7 +41,7 @@
             <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
             <tr *ngFor="let distribution of distributions ;trackBy: trackId">
                 <td *jhiHasAnyAuthority="'ROLE_ADMIN'"><a [routerLink]="['/distribution', distribution.id, 'view' ]">{{distribution.id}}</a></td>
-                <td>{{distribution.date | date:'mediumDate'}}</td>
+                <td>{{distribution.date | date : 'dd/MM/yyyy'}}</td>
                 <td>
                     <span *ngFor="let users of distribution.users; let last = last">
                         {{users.firstName}} {{users.lastName}}{{last ? '' : ', '}}
@@ -73,13 +73,13 @@
                                 [routerLink]="['/distribution', distribution.id, 'view' ]"
                                 class="btn btn-info btn-sm">
                             <fa-icon [icon]="'eye'"></fa-icon>
-                            <span class="d-none d-md-inline">View</span>
+                            <span class="d-none d-md-inline">Détails</span>
                         </button>
                         <button *jhiHasAnyAuthority="'ROLE_ADMIN'" type="submit"
                                 [routerLink]="['/distribution', distribution.id, 'edit']"
                                 class="btn btn-primary btn-sm">
                             <fa-icon [icon]="'pencil-alt'"></fa-icon>
-                            <span class="d-none d-md-inline">Edit</span>
+                            <span class="d-none d-md-inline">Editer</span>
                         </button>
                         <button *jhiHasAnyAuthority="'ROLE_ADMIN'" type="submit"
                                 [routerLink]="['/', 'distribution', { outlets: { popup: distribution.id + '/delete'} }]"
@@ -87,7 +87,7 @@
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">
                             <fa-icon [icon]="'times'"></fa-icon>
-                            <span class="d-none d-md-inline">Delete</span>
+                            <span class="d-none d-md-inline">Supprimer</span>
                         </button>
                     </div>
                 </td>
