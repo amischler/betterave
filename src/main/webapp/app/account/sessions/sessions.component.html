@@ -1,19 +1,19 @@
 <div>
-    <h2 *ngIf="account">Active sessions for [<b>{{account.login}}</b>]</h2>
+    <h2 *ngIf="account">Sesions actives pour [<b>{{account.login}}</b>]</h2>
 
     <div class="alert alert-success" *ngIf="success">
-        <strong>Session invalidated!</strong>
+        <strong>Session désactivée !</strong>
     </div>
     <div class="alert alert-danger" *ngIf="error">
-        <strong>An error has occurred!</strong> The session could not be invalidated.
+        <strong>Une erreur est survenue !</strong> La session n'a pas pu être désactivée.
     </div>
 
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>IP Address</th>
-                    <th>User agent</th>
+                    <th>Adresse IP</th>
+                    <th>Navigateur</th>
                     <th>Date</th>
                     <th></th>
                 </tr>
@@ -27,7 +27,7 @@
                         <button type="submit"
                                 class="btn btn-primary"
                                 (click)="invalidate(session.series)">
-                                 Invalidate
+                                 Désactiver
                         </button>
                     </td>
                 </tr>
