@@ -1,13 +1,12 @@
 package org.amap.lafeedeschamps.service.impl;
 
-import org.amap.lafeedeschamps.service.CommentService;
 import org.amap.lafeedeschamps.domain.Comment;
 import org.amap.lafeedeschamps.repository.CommentRepository;
+import org.amap.lafeedeschamps.service.CommentService;
 import org.amap.lafeedeschamps.service.dto.CommentDTO;
 import org.amap.lafeedeschamps.service.mapper.CommentMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -84,6 +83,14 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete Comment : {}", id);        commentRepository.deleteById(id);
+        log.debug("Request to delete Comment : {}", id);
+        commentRepository.deleteById(id);
+    }
+
+    @Override
+    public List<CommentDTO> findByDistributionId(Long distributionId) {
+        return commentRepository.findByDistributionId(distributionId)
+            .stream().map(commentMapper::toDto)
+            .collect(Collectors.toCollection(LinkedList::new));
     }
 }

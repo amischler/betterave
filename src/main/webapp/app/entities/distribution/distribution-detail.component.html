@@ -1,42 +1,42 @@
 <div class="row justify-content-center">
     <div class="col-8">
         <div *ngIf="distribution">
-            <h2><span>Distribution</span> {{distribution.id}}</h2>
+            <h2><span>Distribution</span> le {{distribution.date | date : 'dd/MM/yyyy'}} à <span *ngIf="distribution.placeId"><a [routerLink]="['/distribution-place', distribution.placeId, 'view']">{{distribution.placeName}}</a></span></h2>
             <hr>
             <jhi-alert-error></jhi-alert-error>
             <dl class="row-md jh-entity-details">
-                <dt><span>Date</span></dt>
-                <dd>
-                    <span>{{distribution.date}}</span>
-                </dd>
-                <dt><span>Text</span></dt>
                 <dd>
                     <span>{{distribution.text}}</span>
                 </dd>
-                <dt><span>Place</span></dt>
-                <dd>
-                    <div *ngIf="distribution.placeId">
-                        <a [routerLink]="['/distribution-place', distribution.placeId, 'view']">{{distribution.placeName}}</a>
-                    </div>
-                </dd>
-                <dt><span>Users</span></dt>
+                <dt><span>Amapiens</span> <span class="badge-pill badge-primary">{{distribution.users.length}}</span></dt>
                 <dd>
                     <span *ngFor="let users of distribution.users; let last = last">
                         {{users.login}}{{last ? '' : ', '}}
                     </span>
+                </dd>
+                <dd *ngFor="let comment of comments;">
+                    <p>{{getUserLogin(comment.userId)}}: {{comment.text}}</p>
                 </dd>
             </dl>
 
             <button type="submit"
                     (click)="previousState()"
                     class="btn btn-info">
-                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Retour</span>
             </button>
-
             <button type="button"
+                    [routerLink]="['/', 'distribution', { outlets: { popup:  distribution.id + '/comment/new'} }]"
+                    replaceUrl="true"
+                    queryParamsHandling="merge"
+                    type="submit"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Ajouter un commentaire</span>
+            </button>
+            <button type="button"
+                    *jhiHasAnyAuthority="'ROLE_ADMIN'"
                     [routerLink]="['/distribution', distribution.id, 'edit']"
                     class="btn btn-primary">
-                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Editer</span>
             </button>
         </div>
     </div>

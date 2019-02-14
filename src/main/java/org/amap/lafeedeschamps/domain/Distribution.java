@@ -32,6 +32,7 @@ public class Distribution implements Serializable {
     @Column(name = "jhi_date")
     private LocalDate date;
 
+    @Lob
     @Column(name = "text")
     private String text;
 

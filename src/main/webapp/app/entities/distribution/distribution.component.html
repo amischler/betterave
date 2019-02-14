@@ -23,6 +23,13 @@
                     <span class="input-group-text">Au</span>
                 </div>
                 <input type="date" class="form-control" name="end" [(ngModel)]="toDate" (ngModelChange)="transition()" required/>
+                <div class="input-group-append">
+                    <span class="input-group-text">à</span>
+                </div>
+                <select class="form-control" id="field_place" name="place" [(ngModel)]="placeId" (ngModelChange)="transition()">
+                    <option [ngValue]="null"></option>
+                    <option [ngValue]="distributionPlaceOption.id" *ngFor="let distributionPlaceOption of distributionplaces; trackBy: trackDistributionPlaceById">{{distributionPlaceOption.name}}</option>
+                </select>
             </div>
         </div>
     </div>
@@ -44,10 +51,11 @@
                 <td>{{distribution.date | date : 'dd/MM/yyyy'}}</td>
                 <td>
                     <span *ngFor="let users of distribution.users; let last = last">
-                        {{users.firstName}} {{users.lastName}}{{last ? '' : ', '}}
+                        {{users.login}}{{last ? '' : ', '}}
                     </span>
+                    <span class="badge-pill badge-primary">{{distribution.users.length}}</span>
                 </td>
-                <td>{{distribution.text}}</td>
+                <td>{{preview(distribution.text, 50)}}</td>
                 <td>
                     <div *ngIf="distribution.placeId">
                         <a [routerLink]="['../distribution-place', distribution.placeId , 'view' ]" >{{distribution.placeName}}</a>
@@ -55,20 +63,6 @@
                 </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
-                        <button type="submit"
-                                *ngIf = "canSubscribe(distribution)"
-                                (click)="subscribe(distribution.id)"
-                                class="btn btn-primary btn-sm">
-                            <fa-icon [icon]="'check'"></fa-icon>
-                            <span class="d-none d-md-inline">S'inscrire</span>
-                        </button>
-                        <button type="submit"
-                                *ngIf = "canUnsubscribe(distribution)"
-                                (click)="unsubscribe(distribution.id)"
-                                class="btn btn-danger btn-sm">
-                            <fa-icon [icon]="'times'"></fa-icon>
-                            <span class="d-none d-md-inline">Se désinscrire</span>
-                        </button>
                         <button type="submit"
                                 [routerLink]="['/distribution', distribution.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -88,6 +82,20 @@
                                 class="btn btn-danger btn-sm">
                             <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline">Supprimer</span>
+                        </button>
+                        <button type="submit"
+                                *ngIf = "canSubscribe(distribution)"
+                                (click)="subscribe(distribution.id)"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'check'"></fa-icon>
+                            <span class="d-none d-md-inline">S'inscrire</span>
+                        </button>
+                        <button type="submit"
+                                *ngIf = "canUnsubscribe(distribution)"
+                                (click)="unsubscribe(distribution.id)"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Se désinscrire</span>
                         </button>
                     </div>
                 </td>

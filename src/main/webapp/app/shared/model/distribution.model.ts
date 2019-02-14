@@ -5,7 +5,7 @@ import { IUser } from 'app/core/user/user.model';
 export interface IDistribution {
     id?: number;
     date?: Moment;
-    text?: string;
+    text?: any;
     comments?: IComment[];
     placeName?: string;
     placeId?: number;
@@ -16,7 +16,7 @@ export class Distribution implements IDistribution {
     constructor(
         public id?: number,
         public date?: Moment,
-        public text?: string,
+        public text?: any,
         public comments?: IComment[],
         public placeName?: string,
         public placeId?: number,

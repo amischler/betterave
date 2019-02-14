@@ -8,11 +8,20 @@ import {
     DistributionUpdateComponent,
     DistributionDeletePopupComponent,
     DistributionDeleteDialogComponent,
+    DistributionCommentPopupComponent,
+    DistributionCommentDialogComponent,
     distributionRoute,
-    distributionPopupRoute
+    distributionPopupRoute,
+    distributionCommentPopupRoute,
+    editDistributionCommentPopupRoute
 } from './';
 
-const ENTITY_STATES = [...distributionRoute, ...distributionPopupRoute];
+const ENTITY_STATES = [
+    ...distributionRoute,
+    ...distributionPopupRoute,
+    ...distributionCommentPopupRoute,
+    ...editDistributionCommentPopupRoute
+];
 
 @NgModule({
     imports: [BetteraveSharedModule, RouterModule.forChild(ENTITY_STATES)],
@@ -21,13 +30,17 @@ const ENTITY_STATES = [...distributionRoute, ...distributionPopupRoute];
         DistributionDetailComponent,
         DistributionUpdateComponent,
         DistributionDeleteDialogComponent,
-        DistributionDeletePopupComponent
+        DistributionDeletePopupComponent,
+        DistributionCommentDialogComponent,
+        DistributionCommentPopupComponent
     ],
     entryComponents: [
         DistributionComponent,
         DistributionUpdateComponent,
         DistributionDeleteDialogComponent,
-        DistributionDeletePopupComponent
+        DistributionDeletePopupComponent,
+        DistributionCommentDialogComponent,
+        DistributionCommentPopupComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

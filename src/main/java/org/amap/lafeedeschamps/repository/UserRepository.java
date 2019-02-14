@@ -2,6 +2,7 @@ package org.amap.lafeedeschamps.repository;
 
 import org.amap.lafeedeschamps.domain.User;
 
+import org.amap.lafeedeschamps.service.dto.UserDTO;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,4 +45,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findOneWithAuthoritiesByEmail(String email);
 
     Page<User> findAllByLoginNot(Pageable pageable, String login);
+
+    List<User> findAllByIdIn(List<Long> id);
 }

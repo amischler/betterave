@@ -7,7 +7,8 @@
         },
         {
             "fieldName": "text",
-            "fieldType": "String"
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text"
         }
     ],
     "relationships": [

@@ -40,4 +40,12 @@ public interface CommentService {
      * @param id the id of the entity
      */
     void delete(Long id);
+
+    /**
+     * Find all comments with the given distributionId.
+     *
+     * @param distributionId
+     * @return
+     */
+    List<CommentDTO> findByDistributionId(Long distributionId);
 }

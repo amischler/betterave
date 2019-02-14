@@ -12,7 +12,7 @@
             </p>
 
             <div class="alert alert-warning" *ngSwitchCase="false">
-                <span>Vous n'avez pas encore de compte ? Votre compte vous permettra de vous inscrire aux distributions et ateliers de l'AMAP.</span>&nbsp;
+                <span><a (click)="login()">Se connecter</a>. Vous n'avez pas encore de compte ? Votre compte vous permettra de vous inscrire aux distributions et ateliers de l'AMAP.</span>&nbsp;
                 <a class="alert-link" routerLink="register">Créer mon compte</a>
             </div>
         </div>

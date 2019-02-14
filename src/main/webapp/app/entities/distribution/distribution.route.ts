@@ -10,14 +10,20 @@ import { DistributionComponent } from './distribution.component';
 import { DistributionDetailComponent } from './distribution-detail.component';
 import { DistributionUpdateComponent } from './distribution-update.component';
 import { DistributionDeletePopupComponent } from './distribution-delete-dialog.component';
+import { DistributionCommentPopupComponent } from './distribution-comment-dialog.component';
 import { IDistribution } from 'app/shared/model/distribution.model';
+import { IComment } from 'app/shared/model/comment.model';
+import { Comment } from 'app/shared/model/comment.model';
+import { CommentService } from 'app/entities/comment/comment.service';
+import { CommentResolve } from 'app/entities/comment/comment.route';
 
 @Injectable({ providedIn: 'root' })
 export class DistributionResolve implements Resolve<IDistribution> {
     constructor(private service: DistributionService) {}
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IDistribution> {
-        const id = route.params['id'] ? route.params['id'] : null;
+        const id = route.params['distributionId'] ? route.params['distributionId'] : null;
+        console.log('Resolving distribution with id ' + id);
         if (id) {
             return this.service.find(id).pipe(
                 filter((response: HttpResponse<Distribution>) => response.ok),
@@ -39,7 +45,7 @@ export const distributionRoute: Routes = [
         canActivate: [UserRouteAccessService]
     },
     {
-        path: ':id/view',
+        path: ':distributionId/view',
         component: DistributionDetailComponent,
         resolve: {
             distribution: DistributionResolve
@@ -63,7 +69,7 @@ export const distributionRoute: Routes = [
         canActivate: [UserRouteAccessService]
     },
     {
-        path: ':id/edit',
+        path: ':distributionId/edit',
         component: DistributionUpdateComponent,
         resolve: {
             distribution: DistributionResolve
@@ -78,10 +84,44 @@ export const distributionRoute: Routes = [
 
 export const distributionPopupRoute: Routes = [
     {
-        path: ':id/delete',
+        path: ':distributionId/delete',
         component: DistributionDeletePopupComponent,
         resolve: {
             distribution: DistributionResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'Distributions'
+        },
+        canActivate: [UserRouteAccessService],
+        outlet: 'popup'
+    }
+];
+
+export const editDistributionCommentPopupRoute: Routes = [
+    {
+        path: ':distributionId/comment/:commentId',
+        component: DistributionCommentPopupComponent,
+        resolve: {
+            distribution: DistributionResolve,
+            comment: CommentResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'Distributions'
+        },
+        canActivate: [UserRouteAccessService],
+        outlet: 'popup'
+    }
+];
+
+export const distributionCommentPopupRoute: Routes = [
+    {
+        path: ':distributionId/comment/new',
+        component: DistributionCommentPopupComponent,
+        resolve: {
+            distribution: DistributionResolve,
+            comment: CommentResolve
         },
         data: {
             authorities: ['ROLE_USER'],

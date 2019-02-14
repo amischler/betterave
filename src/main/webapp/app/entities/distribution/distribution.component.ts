@@ -10,6 +10,8 @@ import { AccountService } from 'app/core';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
 import { DistributionService } from './distribution.service';
+import { IDistributionPlace } from 'app/shared/model/distribution-place.model';
+import { DistributionPlaceService } from 'app/entities/distribution-place';
 
 @Component({
     selector: 'jhi-distribution',
@@ -27,9 +29,12 @@ export class DistributionComponent implements OnInit, OnDestroy {
     totalItems: number;
     fromDate: string;
     toDate: string;
+    placeId: string;
+    distributionplaces: IDistributionPlace[];
 
     constructor(
         protected distributionService: DistributionService,
+        protected distributionPlaceService: DistributionPlaceService,
         protected jhiAlertService: JhiAlertService,
         protected eventManager: JhiEventManager,
         protected parseLinks: JhiParseLinks,
@@ -53,7 +58,8 @@ export class DistributionComponent implements OnInit, OnDestroy {
                 size: this.itemsPerPage,
                 sort: this.sort(),
                 fromDate: this.fromDate,
-                toDate: this.toDate
+                toDate: this.toDate,
+                placeId: this.placeId
             })
             .subscribe(
                 (res: HttpResponse<IDistribution[]>) => this.paginateDistributions(res.body, res.headers),
@@ -80,6 +86,16 @@ export class DistributionComponent implements OnInit, OnDestroy {
             this.currentAccount = account;
         });
         this.registerChangeInDistributions();
+        this.distributionPlaceService
+            .query()
+            .pipe(
+                filter((mayBeOk: HttpResponse<IDistributionPlace[]>) => mayBeOk.ok),
+                map((response: HttpResponse<IDistributionPlace[]>) => response.body)
+            )
+            .subscribe(
+                (res: IDistributionPlace[]) => (this.distributionplaces = res),
+                (res: HttpErrorResponse) => this.onError(res.message)
+            );
     }
 
     ngOnDestroy() {
@@ -169,5 +185,9 @@ export class DistributionComponent implements OnInit, OnDestroy {
 
     transition() {
         this.reset();
+    }
+
+    preview(text, showCars) {
+        return text.substr(0, showCars) + '...';
     }
 }

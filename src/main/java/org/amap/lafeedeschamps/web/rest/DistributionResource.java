@@ -111,18 +111,29 @@ public class DistributionResource {
      *
      * @param fromDate the start of the time period of Distribution to get
      * @param toDate   the end of the time period of Distribution to get
+     * @param placeId  the placeIf of Distribution to get
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of AuditEvents in body
      */
-    @GetMapping(path = "/distributions", params = {"fromDate", "toDate"})
-    public ResponseEntity<List<DistributionDTO>> getByDates(
+    @GetMapping(path = "/distributions", params = {"fromDate", "toDate", "placeId"})
+    public ResponseEntity<List<DistributionDTO>> getByDatesAndPlaceId(
         @RequestParam(value = "fromDate") LocalDate fromDate,
         @RequestParam(value = "toDate") LocalDate toDate,
+        @RequestParam(value = "placeId", required = false) String placeId,
         Pageable pageable) {
-        Page<DistributionDTO> page = distributionService.findByDates(
-            fromDate.atStartOfDay(ZoneId.systemDefault()).toLocalDate(),
-            toDate.atStartOfDay(ZoneId.systemDefault()).plusDays(1).toLocalDate(),
-            pageable);
+        Page<DistributionDTO> page = null;
+        if (!"undefined".equals(placeId) && !"null".equals(placeId)) {
+            page = distributionService.findByDatesAndPlaceId(
+                fromDate.atStartOfDay(ZoneId.systemDefault()).toLocalDate(),
+                toDate.atStartOfDay(ZoneId.systemDefault()).plusDays(1).toLocalDate(),
+                Long.valueOf(placeId),
+                pageable);
+        } else {
+            page = distributionService.findByDates(
+                fromDate.atStartOfDay(ZoneId.systemDefault()).toLocalDate(),
+                toDate.atStartOfDay(ZoneId.systemDefault()).plusDays(1).toLocalDate(),
+                pageable);
+        }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/distributions");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

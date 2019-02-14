@@ -5,6 +5,7 @@ import org.amap.lafeedeschamps.BetteraveApp;
 import org.amap.lafeedeschamps.domain.Comment;
 import org.amap.lafeedeschamps.repository.CommentRepository;
 import org.amap.lafeedeschamps.service.CommentService;
+import org.amap.lafeedeschamps.service.UserService;
 import org.amap.lafeedeschamps.service.dto.CommentDTO;
 import org.amap.lafeedeschamps.service.mapper.CommentMapper;
 import org.amap.lafeedeschamps.web.rest.errors.ExceptionTranslator;
@@ -56,6 +57,9 @@ public class CommentResourceIntTest {
     private CommentService commentService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -77,7 +81,7 @@ public class CommentResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CommentResource commentResource = new CommentResource(commentService);
+        final CommentResource commentResource = new CommentResource(commentService, userService);
         this.restCommentMockMvc = MockMvcBuilders.standaloneSetup(commentResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

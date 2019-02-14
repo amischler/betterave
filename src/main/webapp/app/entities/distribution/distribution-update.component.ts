@@ -4,7 +4,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import * as moment from 'moment';
-import { JhiAlertService } from 'ng-jhipster';
+import { JhiAlertService, JhiDataUtils } from 'ng-jhipster';
 import { IDistribution } from 'app/shared/model/distribution.model';
 import { DistributionService } from './distribution.service';
 import { IDistributionPlace } from 'app/shared/model/distribution-place.model';
@@ -25,6 +25,7 @@ export class DistributionUpdateComponent implements OnInit {
     dateDp: any;
 
     constructor(
+        protected dataUtils: JhiDataUtils,
         protected jhiAlertService: JhiAlertService,
         protected distributionService: DistributionService,
         protected distributionPlaceService: DistributionPlaceService,
@@ -54,6 +55,18 @@ export class DistributionUpdateComponent implements OnInit {
                 map((response: HttpResponse<IUser[]>) => response.body)
             )
             .subscribe((res: IUser[]) => (this.users = res), (res: HttpErrorResponse) => this.onError(res.message));
+    }
+
+    byteSize(field) {
+        return this.dataUtils.byteSize(field);
+    }
+
+    openFile(contentType, field) {
+        return this.dataUtils.openFile(contentType, field);
+    }
+
+    setFileData(event, entity, field, isImage) {
+        this.dataUtils.setFileData(event, entity, field, isImage);
     }
 
     previousState() {

@@ -1,9 +1,12 @@
 package org.amap.lafeedeschamps.web.rest;
+
+import io.github.jhipster.web.util.ResponseUtil;
+import org.amap.lafeedeschamps.domain.User;
 import org.amap.lafeedeschamps.service.CommentService;
+import org.amap.lafeedeschamps.service.UserService;
+import org.amap.lafeedeschamps.service.dto.CommentDTO;
 import org.amap.lafeedeschamps.web.rest.errors.BadRequestAlertException;
 import org.amap.lafeedeschamps.web.rest.util.HeaderUtil;
-import org.amap.lafeedeschamps.service.dto.CommentDTO;
-import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -28,8 +30,11 @@ public class CommentResource {
 
     private final CommentService commentService;
 
-    public CommentResource(CommentService commentService) {
+    private final UserService userService;
+
+    public CommentResource(CommentService commentService, UserService userService) {
         this.commentService = commentService;
+        this.userService = userService;
     }
 
     /**
@@ -45,6 +50,8 @@ public class CommentResource {
         if (commentDTO.getId() != null) {
             throw new BadRequestAlertException("A new comment cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        Optional<User> user = userService.getUserWithAuthorities();
+        user.ifPresent(u -> commentDTO.setUserId(u.getId()));
         CommentDTO result = commentService.save(commentDTO);
         return ResponseEntity.created(new URI("/api/comments/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
@@ -94,6 +101,18 @@ public class CommentResource {
         log.debug("REST request to get Comment : {}", id);
         Optional<CommentDTO> commentDTO = commentService.findOne(id);
         return ResponseUtil.wrapOrNotFound(commentDTO);
+    }
+
+    /**
+     * GET  /comments?distributionId=1 : get the comments for the given distributionId
+     *
+     * @param id the id of the commentDTO to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the commentDTO, or with status 404 (Not Found)
+     */
+    @GetMapping(value = "/comments", params = {"distributionId"})
+    public List<CommentDTO> getCommentsByDistributionId(@RequestParam Long distributionId) {
+        log.debug("REST request to get Comments by distributionId : {}", distributionId);
+        return commentService.findByDistributionId(distributionId);
     }
 
     /**

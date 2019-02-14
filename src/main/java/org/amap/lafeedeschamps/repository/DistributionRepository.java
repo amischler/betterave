@@ -32,5 +32,8 @@ public interface DistributionRepository extends JpaRepository<Distribution, Long
     @Query("select distribution from Distribution distribution left join fetch distribution.users where distribution.id =:id")
     Optional<Distribution> findOneWithEagerRelationships(@Param("id") Long id);
 
+    Page<Distribution> findAllByDateBetweenAndPlaceIdOrderByDate(LocalDate fromDate, LocalDate toDate, Long placeId, Pageable pageable);
+
     Page<Distribution> findAllByDateBetweenOrderByDate(LocalDate fromDate, LocalDate toDate, Pageable pageable);
+
 }

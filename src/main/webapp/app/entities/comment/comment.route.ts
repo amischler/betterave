@@ -17,7 +17,7 @@ export class CommentResolve implements Resolve<IComment> {
     constructor(private service: CommentService) {}
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IComment> {
-        const id = route.params['id'] ? route.params['id'] : null;
+        const id = route.params['commentId'] ? route.params['commentId'] : null;
         if (id) {
             return this.service.find(id).pipe(
                 filter((response: HttpResponse<Comment>) => response.ok),
@@ -39,7 +39,7 @@ export const commentRoute: Routes = [
         canActivate: [UserRouteAccessService]
     },
     {
-        path: ':id/view',
+        path: ':commentId/view',
         component: CommentDetailComponent,
         resolve: {
             comment: CommentResolve
@@ -63,7 +63,7 @@ export const commentRoute: Routes = [
         canActivate: [UserRouteAccessService]
     },
     {
-        path: ':id/edit',
+        path: ':commentId/edit',
         component: CommentUpdateComponent,
         resolve: {
             comment: CommentResolve
@@ -78,7 +78,7 @@ export const commentRoute: Routes = [
 
 export const commentPopupRoute: Routes = [
     {
-        path: ':id/delete',
+        path: ':commentId/delete',
         component: CommentDeletePopupComponent,
         resolve: {
             comment: CommentResolve

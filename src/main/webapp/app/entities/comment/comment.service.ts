@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
 import { IComment } from 'app/shared/model/comment.model';
+import { IDistribution } from 'app/shared/model/distribution.model';
 
 type EntityResponseType = HttpResponse<IComment>;
 type EntityArrayResponseType = HttpResponse<IComment[]>;

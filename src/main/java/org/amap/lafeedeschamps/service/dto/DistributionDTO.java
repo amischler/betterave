@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
+import javax.persistence.Lob;
 
 /**
  * A DTO for the Distribution entity.
@@ -14,6 +15,7 @@ public class DistributionDTO implements Serializable {
 
     private LocalDate date;
 
+    @Lob
     private String text;
 
 
