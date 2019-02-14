@@ -89,7 +89,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentDTO> findByDistributionId(Long distributionId) {
-        return commentRepository.findByDistributionId(distributionId)
+        return commentRepository.findAllByDistributionIdWithEagerRelationships(distributionId)
             .stream().map(commentMapper::toDto)
             .collect(Collectors.toCollection(LinkedList::new));
     }

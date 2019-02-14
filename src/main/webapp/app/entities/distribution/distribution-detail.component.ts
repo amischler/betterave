@@ -6,7 +6,7 @@ import { JhiDataUtils } from 'ng-jhipster';
 import { IDistribution } from 'app/shared/model/distribution.model';
 import { IComment } from 'app/shared/model/comment.model';
 import { CommentService } from 'app/entities/comment/comment.service';
-import { UserService } from 'app/core/user/user.service';
+import { AccountService } from 'app/core';
 
 @Component({
     selector: 'jhi-distribution-detail',
@@ -15,16 +15,19 @@ import { UserService } from 'app/core/user/user.service';
 export class DistributionDetailComponent implements OnInit {
     distribution: IDistribution;
     comments;
-    users;
+    currentAccount: any;
 
     constructor(
         protected dataUtils: JhiDataUtils,
         protected activatedRoute: ActivatedRoute,
         protected commentService: CommentService,
-        protected userService: UserService
+        protected accountService: AccountService
     ) {}
 
     ngOnInit() {
+        this.accountService.identity().then(account => {
+            this.currentAccount = account;
+        });
         this.activatedRoute.data.subscribe(({ distribution }) => {
             this.distribution = distribution;
             // load all comments
@@ -36,18 +39,9 @@ export class DistributionDetailComponent implements OnInit {
         this.comments = this.commentService.query({ distributionId: this.distribution.id }).subscribe(
             (res: HttpResponse<IComment[]>) => {
                 this.comments = res.body;
-                // load user information for the received comments
-                this.loadUsers();
             },
             (res: HttpErrorResponse) => this.onCommentError(res.message)
         );
-    }
-
-    loadUsers() {
-        const userIds = this.comments.map(comment => comment.userId);
-        this.userService.query({ id: userIds }).subscribe((res2: HttpResponse<IComment[]>) => {
-            this.users = res2.body;
-        });
     }
 
     byteSize(field) {
@@ -63,11 +57,11 @@ export class DistributionDetailComponent implements OnInit {
 
     onCommentError(message) {}
 
-    getUserLogin(id) {
-        if (this.users) {
-            return this.users.filter(user => user.id === id)[0].login;
-        } else {
-            return '...';
-        }
+    canEditComment(comment) {
+        return comment.userId === this.currentAccount.id;
+    }
+
+    deleteComment(comment) {
+        this.commentService.delete(comment.id).subscribe(response => this.loadComments());
     }
 }

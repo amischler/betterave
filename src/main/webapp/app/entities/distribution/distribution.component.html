@@ -39,9 +39,10 @@
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
             <th *jhiHasAnyAuthority="'ROLE_ADMIN'" jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="date"><span>Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="placeName"><span>Lieu de distribution</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="users"><span>Amapiens</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="text"><span>Détails</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="placeName"><span>Lieu de distribution</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="comments"><span>Commentaires</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -50,17 +51,18 @@
                 <td *jhiHasAnyAuthority="'ROLE_ADMIN'"><a [routerLink]="['/distribution', distribution.id, 'view' ]">{{distribution.id}}</a></td>
                 <td>{{distribution.date | date : 'dd/MM/yyyy'}}</td>
                 <td>
+                    <div *ngIf="distribution.placeId">
+                        <a [routerLink]="['../distribution-place', distribution.placeId , 'view' ]" >{{distribution.placeName}}</a>
+                    </div>
+                </td>
+                <td>
                     <span *ngFor="let users of distribution.users; let last = last">
                         {{users.login}}{{last ? '' : ', '}}
                     </span>
                     <span class="badge-pill badge-primary">{{distribution.users.length}}</span>
                 </td>
                 <td>{{preview(distribution.text, 50)}}</td>
-                <td>
-                    <div *ngIf="distribution.placeId">
-                        <a [routerLink]="['../distribution-place', distribution.placeId , 'view' ]" >{{distribution.placeName}}</a>
-                    </div>
-                </td>
+                <td><span *ngFor="let comment of distribution.comments; let last = last">{{comment.user.login}}: {{comment.text}}{{last ? '' : ', '}}</span></td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
@@ -82,6 +84,15 @@
                                 class="btn btn-danger btn-sm">
                             <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline">Supprimer</span>
+                        </button>
+                        <button type="button"
+                                [routerLink]="['/', 'distribution', { outlets: { popup:  distribution.id + '/comment/new'} }]"
+                                replaceUrl="false"
+                                queryParamsHandling="merge"
+                                type="submit"
+                                class="btn btn-primary">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span> Commenter</span>
                         </button>
                         <button type="submit"
                                 *ngIf = "canSubscribe(distribution)"

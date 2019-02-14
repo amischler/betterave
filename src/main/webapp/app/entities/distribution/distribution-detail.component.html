@@ -15,7 +15,27 @@
                     </span>
                 </dd>
                 <dd *ngFor="let comment of comments;">
-                    <p>{{getUserLogin(comment.userId)}}: {{comment.text}}</p>
+                    <div>{{comment.user.login}}: {{comment.text}}
+                        <div class="btn-group">
+                        <button type="button"
+                            *ngIf="canEditComment(comment)"
+                            [routerLink]="['/', 'distribution', { outlets: { popup:  distribution.id + '/comment/' + comment.id} }]"
+                            replaceUrl="false"
+                            queryParamsHandling="merge"
+                            type="submit"
+                            class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline"></span>
+                        </button>
+                        <button type="submit"
+                                *ngIf="canEditComment(comment)"
+                                (click)="deleteComment(comment)"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline"></span>
+                        </button>
+                        </div>
+                    </div>
                 </dd>
             </dl>
 
@@ -26,7 +46,7 @@
             </button>
             <button type="button"
                     [routerLink]="['/', 'distribution', { outlets: { popup:  distribution.id + '/comment/new'} }]"
-                    replaceUrl="true"
+                    replaceUrl="false"
                     queryParamsHandling="merge"
                     type="submit"
                     class="btn btn-primary">

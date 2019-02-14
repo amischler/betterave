@@ -168,18 +168,6 @@ public class UserResource {
     }
 
     /**
-     * GET /users : get all users for the given ids list.
-     *
-     * @param id the list of ids
-     * @return the ResponseEntity with status 200 (OK) and with body all users
-     */
-    @GetMapping(value = "/users", params = {"id"})
-    public List<UserDTO> getUsersById(@RequestParam List<Long> id) {
-        log.debug("REST request to get all User by id : {}", id);
-        return userService.findAllByIds(id);
-    }
-
-    /**
      * DELETE /users/:login : delete the "login" User.
      *
      * @param login the login of the user to delete

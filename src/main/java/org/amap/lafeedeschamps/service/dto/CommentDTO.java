@@ -16,6 +16,8 @@ public class CommentDTO implements Serializable {
 
     private Long userId;
 
+    private UserDTO user;
+
     public Long getId() {
         return id;
     }
@@ -46,6 +48,14 @@ public class CommentDTO implements Serializable {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public UserDTO getUser() {
+        return user;
+    }
+
+    public void setUser(UserDTO user) {
+        this.user = user;
     }
 
     @Override

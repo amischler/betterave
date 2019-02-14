@@ -12,6 +12,8 @@ import { ITEMS_PER_PAGE } from 'app/shared';
 import { DistributionService } from './distribution.service';
 import { IDistributionPlace } from 'app/shared/model/distribution-place.model';
 import { DistributionPlaceService } from 'app/entities/distribution-place';
+import { CommentService } from 'app/entities/comment/comment.service';
+import { IComment } from 'app/shared/model/comment.model';
 
 @Component({
     selector: 'jhi-distribution',
@@ -39,6 +41,7 @@ export class DistributionComponent implements OnInit, OnDestroy {
         protected eventManager: JhiEventManager,
         protected parseLinks: JhiParseLinks,
         protected accountService: AccountService,
+        protected commentService: CommentService,
         private datePipe: DatePipe
     ) {
         this.distributions = [];
@@ -123,6 +126,7 @@ export class DistributionComponent implements OnInit, OnDestroy {
         this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
         for (let i = 0; i < data.length; i++) {
             this.distributions.push(data[i]);
+            this.loadComments(i);
         }
     }
 
@@ -190,4 +194,15 @@ export class DistributionComponent implements OnInit, OnDestroy {
     preview(text, showCars) {
         return text.substr(0, showCars) + '...';
     }
+
+    loadComments(i) {
+        this.commentService.query({ distributionId: this.distributions[i].id }).subscribe(
+            (res: HttpResponse<IComment[]>) => {
+                this.distributions[i].comments = res.body;
+            },
+            (res: HttpErrorResponse) => this.onCommentError(res.message)
+        );
+    }
+
+    onCommentError(message) {}
 }
