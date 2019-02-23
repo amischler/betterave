@@ -62,7 +62,7 @@
                     <span class="badge-pill badge-primary">{{distribution.users.length}}</span>
                 </td>
                 <td>{{preview(distribution.text, 50)}}</td>
-                <td><span *ngFor="let comment of distribution.comments; let last = last">{{comment.user.login}}: {{comment.text}}{{last ? '' : ', '}}</span></td>
+                <td><span *ngFor="let comment of distribution.comments; let last = last" class="badge badge-pill badge-light">{{comment.user.login}} <span class="font-weight-light text-wrap text-left">{{comment.text}}</span></span></td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
