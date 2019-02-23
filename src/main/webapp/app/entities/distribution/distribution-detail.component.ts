@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
-import { JhiDataUtils } from 'ng-jhipster';
+import { JhiDataUtils, JhiEventManager } from 'ng-jhipster';
+import { Subscription } from 'rxjs';
 
 import { IDistribution } from 'app/shared/model/distribution.model';
 import { IComment } from 'app/shared/model/comment.model';
@@ -12,16 +13,18 @@ import { AccountService } from 'app/core';
     selector: 'jhi-distribution-detail',
     templateUrl: './distribution-detail.component.html'
 })
-export class DistributionDetailComponent implements OnInit {
+export class DistributionDetailComponent implements OnInit, OnDestroy {
     distribution: IDistribution;
     comments;
     currentAccount: any;
+    eventSubscriber: Subscription;
 
     constructor(
         protected dataUtils: JhiDataUtils,
         protected activatedRoute: ActivatedRoute,
         protected commentService: CommentService,
-        protected accountService: AccountService
+        protected accountService: AccountService,
+        protected eventManager: JhiEventManager
     ) {}
 
     ngOnInit() {
@@ -33,6 +36,7 @@ export class DistributionDetailComponent implements OnInit {
             // load all comments
             this.loadComments();
         });
+        this.registerChangeInComments();
     }
 
     loadComments() {
@@ -63,5 +67,13 @@ export class DistributionDetailComponent implements OnInit {
 
     deleteComment(comment) {
         this.commentService.delete(comment.id).subscribe(response => this.loadComments());
+    }
+
+    registerChangeInComments() {
+        this.eventSubscriber = this.eventManager.subscribe('commentsModification', response => this.loadComments());
+    }
+
+    ngOnDestroy() {
+        this.eventManager.destroy(this.eventSubscriber);
     }
 }

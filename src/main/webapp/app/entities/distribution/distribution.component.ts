@@ -23,6 +23,7 @@ export class DistributionComponent implements OnInit, OnDestroy {
     distributions: IDistribution[];
     currentAccount: any;
     eventSubscriber: Subscription;
+    commentsEventSubscriber: Subscription;
     itemsPerPage: number;
     links: any;
     page: any;
@@ -89,6 +90,7 @@ export class DistributionComponent implements OnInit, OnDestroy {
             this.currentAccount = account;
         });
         this.registerChangeInDistributions();
+        this.registerChangeInComments();
         this.distributionPlaceService
             .query()
             .pipe(
@@ -103,6 +105,7 @@ export class DistributionComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.eventManager.destroy(this.eventSubscriber);
+        this.eventManager.destroy(this.commentsEventSubscriber);
     }
 
     trackId(index: number, item: IDistribution) {
@@ -111,6 +114,10 @@ export class DistributionComponent implements OnInit, OnDestroy {
 
     registerChangeInDistributions() {
         this.eventSubscriber = this.eventManager.subscribe('distributionListModification', response => this.reset());
+    }
+
+    registerChangeInComments() {
+        this.commentsEventSubscriber = this.eventManager.subscribe('commentsModification', response => this.reset());
     }
 
     sort() {

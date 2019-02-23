@@ -32,11 +32,19 @@ export class DistributionCommentDialogComponent {
     confirmComment() {
         if (this.comment.id !== undefined) {
             this.commentService.update(this.comment).subscribe(response => {
+                this.eventManager.broadcast({
+                    name: 'commentsModification',
+                    content: 'Commented distribution'
+                });
                 this.activeModal.dismiss(true);
             });
         } else {
             this.comment.distributionId = this.distribution.id;
             this.commentService.create(this.comment).subscribe(response => {
+                this.eventManager.broadcast({
+                    name: 'commentsModification',
+                    content: 'Commented distribution'
+                });
                 this.activeModal.dismiss(true);
             });
         }
