@@ -192,7 +192,9 @@ export class DistributionComponent implements OnInit, OnDestroy {
     }
 
     preview(text, showCars) {
-        if (text === null) return '';
+        if (text === null) {
+            return '';
+        }
         return text.substr(0, showCars) + '...';
     }
 
