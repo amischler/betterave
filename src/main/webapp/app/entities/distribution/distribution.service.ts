@@ -25,6 +25,13 @@ export class DistributionService {
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
+    createMultiple(distribution: IDistribution): Observable<EntityResponseType> {
+        const copy = this.convertDateFromClient(distribution);
+        return this.http
+            .post<IDistribution>(this.resourceUrl + '/bulk', copy, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+    }
+
     update(distribution: IDistribution): Observable<EntityResponseType> {
         const copy = this.convertDateFromClient(distribution);
         return this.http

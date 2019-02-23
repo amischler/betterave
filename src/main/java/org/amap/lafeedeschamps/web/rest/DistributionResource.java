@@ -65,6 +65,29 @@ public class DistributionResource {
     }
 
     /**
+     * POST  /distributions/bulk : Create multiple distributions based on a given distribution.
+     * This method will create 52 occurrences of the same distribution with a one week frequency.
+     *
+     * @param distributionDTO the distributionDTO to create
+     * @return the ResponseEntity with status 201 (Created) and with body the new distributionDTO, or with status 400 (Bad Request) if the distribution has already an ID
+     * @throws URISyntaxException if the Location URI syntax is incorrect
+     */
+    @PostMapping("/distributions/bulk")
+    public ResponseEntity<DistributionDTO> createMultipleDistribution(@RequestBody DistributionDTO distributionDTO) throws URISyntaxException {
+        log.debug("REST request to save Distribution : {}", distributionDTO);
+        if (distributionDTO.getId() != null) {
+            throw new BadRequestAlertException("A new distribution cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        for (int i = 0; i < 52; i++) {
+            distributionService.save(distributionDTO);
+            distributionDTO.setDate(distributionDTO.getDate().plusDays(7));
+        }
+        return ResponseEntity.created(new URI("/api/distributions/"))
+            .headers(HeaderUtil.createAlert("Multiple distributions created", null))
+            .body(distributionDTO);
+    }
+
+    /**
      * PUT  /distributions : Updates an existing distribution.
      *
      * @param distributionDTO the distributionDTO to update

@@ -18,6 +18,7 @@ import { IUser, UserService } from 'app/core';
 export class DistributionUpdateComponent implements OnInit {
     distribution: IDistribution;
     isSaving: boolean;
+    bulk: boolean;
 
     distributionplaces: IDistributionPlace[];
 
@@ -78,7 +79,11 @@ export class DistributionUpdateComponent implements OnInit {
         if (this.distribution.id !== undefined) {
             this.subscribeToSaveResponse(this.distributionService.update(this.distribution));
         } else {
-            this.subscribeToSaveResponse(this.distributionService.create(this.distribution));
+            if (this.bulk) {
+                this.subscribeToSaveResponse(this.distributionService.createMultiple(this.distribution));
+            } else {
+                this.subscribeToSaveResponse(this.distributionService.create(this.distribution));
+            }
         }
     }
 

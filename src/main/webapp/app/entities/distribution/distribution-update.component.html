@@ -39,6 +39,10 @@
                     </select>
                 </div>
             </div>
+            <div *ngIf="!distribution.id" class=""form-group>
+                <input id="bulk" name="bulk" type="checkbox" [(ngModel)]="bulk">
+                <label for="bulk">Création multiple ? En cochant cette case, l'évènement créé sera dupliqué de manière hebdomadaire pendant 1 an.</label>
+            </div>
             <div>
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
