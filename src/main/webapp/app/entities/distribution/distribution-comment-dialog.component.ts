@@ -63,11 +63,11 @@ export class DistributionCommentPopupComponent implements OnInit, OnDestroy {
                 this.ngbModalRef.componentInstance.comment = comment;
                 this.ngbModalRef.result.then(
                     result => {
-                        this.router.navigate(['/distribution', { outlets: { popup: null } }]);
+                        this.router.navigate(['/distribution', { outlets: { popup: null } }], { skipLocationChange: true });
                         this.ngbModalRef = null;
                     },
                     reason => {
-                        this.router.navigate(['/distribution', { outlets: { popup: null } }]);
+                        this.router.navigate(['/distribution', { outlets: { popup: null } }], { skipLocationChange: true });
                         this.ngbModalRef = null;
                     }
                 );

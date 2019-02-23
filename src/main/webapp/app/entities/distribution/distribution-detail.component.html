@@ -20,7 +20,7 @@
                         <button type="button"
                             *ngIf="canEditComment(comment)"
                             [routerLink]="['/', 'distribution', { outlets: { popup:  distribution.id + '/comment/' + comment.id} }]"
-                            replaceUrl="false"
+                            skipLocationChange="true"
                             queryParamsHandling="merge"
                             type="submit"
                             class="btn btn-light btn-sm">
@@ -46,7 +46,7 @@
             </button>
             <button type="button"
                     [routerLink]="['/', 'distribution', { outlets: { popup:  distribution.id + '/comment/new'} }]"
-                    replaceUrl="false"
+                    skipLocationChange="true"
                     queryParamsHandling="merge"
                     type="submit"
                     class="btn btn-primary">
