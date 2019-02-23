@@ -195,6 +195,9 @@ export class DistributionComponent implements OnInit, OnDestroy {
         if (text === null) {
             return '';
         }
+        if (text.length <= showCars) {
+            return text;
+        }
         return text.substr(0, showCars) + '...';
     }
 
