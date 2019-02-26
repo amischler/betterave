@@ -3,6 +3,7 @@ package org.amap.lafeedeschamps.web.rest;
 import org.amap.lafeedeschamps.BetteraveApp;
 
 import org.amap.lafeedeschamps.domain.Comment;
+import org.amap.lafeedeschamps.domain.User;
 import org.amap.lafeedeschamps.repository.CommentRepository;
 import org.amap.lafeedeschamps.service.CommentService;
 import org.amap.lafeedeschamps.service.UserService;
@@ -97,8 +98,11 @@ public class CommentResourceIntTest {
      * if they test an entity which requires the current entity.
      */
     public static Comment createEntity(EntityManager em) {
+        User user = new User();
+        user.setId(1l);
         Comment comment = new Comment()
-            .text(DEFAULT_TEXT);
+            .text(DEFAULT_TEXT)
+            .user(user);
         return comment;
     }
 
