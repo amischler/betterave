@@ -5,8 +5,8 @@
     <div class="col-md-9">
         <div [ngSwitch]="isAuthenticated()">
             <h1 *ngSwitchCase="false" class="display-4">Bienvenue!</h1>
-            <h1 *ngSwitchCase="true">Bienvenue, {{account.firstName}}</h1>
-            <p class="lead">Plateforme de gestion de l AMAP la Fee des Champs</p>
+            <h1 *ngSwitchCase="true">Bienvenue, {{account.login}}</h1>
+            <p class="lead">Plateforme de gestion de l'AMAP la Fée des Champs</p>
             <p  *ngSwitchCase="true">
                 Voir les prochaines <a class="alert-link" routerLink="distribution">distributions</a>
             </p>
