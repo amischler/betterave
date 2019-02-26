@@ -51,6 +51,11 @@ spring:
         port: 587
         username: amap.lafeedeschamps@gmail.com
         password:
+        tls: true
+        properties.mail.smtp:
+            auth: true
+            starttls.enable: true
+            ssl.trust: smtp.gmail.com
     thymeleaf:
         cache: true
 
