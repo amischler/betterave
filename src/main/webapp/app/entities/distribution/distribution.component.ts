@@ -167,7 +167,7 @@ export class DistributionComponent implements OnInit, OnDestroy {
         return (
             !distribution.users.some(user => {
                 return user.login === this.currentAccount.login;
-            }) && distribution.date > new Date()
+            }) && distribution.startDate > new Date()
         );
     }
 
@@ -175,7 +175,7 @@ export class DistributionComponent implements OnInit, OnDestroy {
         return (
             distribution.users.some(user => {
                 return user.login === this.currentAccount.login;
-            }) && distribution.date > new Date()
+            }) && distribution.startDate > new Date()
         );
     }
 
