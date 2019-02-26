@@ -1,13 +1,17 @@
 <div class="row justify-content-center">
     <div class="col-8">
         <div *ngIf="distribution">
-            <h2><span>Distribution</span> le {{distribution.date | date : 'dd/MM/yyyy'}} à <span *ngIf="distribution.placeId"><a [routerLink]="['/distribution-place', distribution.placeId, 'view']">{{distribution.placeName}}</a></span></h2>
+            <h2><span>Distribution</span> le {{distribution.startDate | date : 'dd/MM/yyyy'}} à <span *ngIf="distribution.placeId"><a [routerLink]="['/distribution-place', distribution.placeId, 'view']">{{distribution.placeName}}</a></span></h2>
             <hr>
             <jhi-alert-error></jhi-alert-error>
             <dl class="row-md jh-entity-details">
                 <dd>
                     <span>{{distribution.text}}</span>
                 </dd>
+                <dt>Début</dt>
+                <dd>Le {{distribution.startDate | date : 'dd/MM/yyyy'}} à {{distribution.startDate | date : 'HH:mm'}}</dd>
+                <dt>Fin</dt>
+                <dd>Le {{distribution.endDate | date : 'dd/MM/yyyy'}} à {{distribution.endDate | date : 'HH:mm'}}</dd>
                 <dt><span>Amapiens</span> <span class="badge-pill badge-primary">{{distribution.users.length}}</span></dt>
                 <dd>
                     <span *ngFor="let users of distribution.users; let last = last">

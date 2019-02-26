@@ -1,5 +1,32 @@
 {
-    "name": "Distribution",
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "comments",
+            "otherEntityName": "comment",
+            "otherEntityRelationshipName": "distribution",
+            "otherEntityRelationshipNameUndefined": false
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "place",
+            "otherEntityName": "distributionPlace",
+            "otherEntityField": "name",
+            "otherEntityRelationshipName": "distribution",
+            "otherEntityRelationshipNameUndefined": false
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityRelationshipName": "distributions",
+            "relationshipName": "users",
+            "otherEntityName": "user",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipNameUndefined": false
+        }
+    ],
     "fields": [
         {
             "fieldName": "date",
@@ -9,38 +36,22 @@
             "fieldName": "text",
             "fieldType": "byte[]",
             "fieldTypeBlobContent": "text"
-        }
-    ],
-    "relationships": [
-        {
-            "relationshipType": "one-to-many",
-            "relationshipName": "comments",
-            "otherEntityName": "comment",
-            "otherEntityRelationshipName": "distribution"
         },
         {
-            "relationshipType": "many-to-one",
-            "relationshipName": "place",
-            "otherEntityName": "distributionPlace",
-            "otherEntityField": "name",
-            "otherEntityRelationshipName": "distribution"
+            "fieldName": "endDate",
+            "fieldType": "Instant"
         },
         {
-            "relationshipType": "many-to-many",
-            "otherEntityRelationshipName": "distributions",
-            "relationshipName": "users",
-            "otherEntityName": "user",
-            "otherEntityField": "id",
-            "ownerSide": true
+            "fieldName": "startDate",
+            "fieldType": "Instant"
         }
     ],
     "changelogDate": "20190203093219",
-    "entityTableName": "distribution",
     "dto": "mapstruct",
-    "pagination": "infinite-scroll",
+    "searchEngine": false,
     "service": "serviceImpl",
+    "entityTableName": "distribution",
+    "databaseType": "sql",
     "jpaMetamodelFiltering": false,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*"
+    "pagination": "infinite-scroll"
 }

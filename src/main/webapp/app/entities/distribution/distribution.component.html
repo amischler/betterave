@@ -49,7 +49,7 @@
             <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
             <tr *ngFor="let distribution of distributions ;trackBy: trackId">
                 <td *jhiHasAnyAuthority="'ROLE_ADMIN'"><a [routerLink]="['/distribution', distribution.id, 'view' ]">{{distribution.id}}</a></td>
-                <td>{{distribution.date | date : 'dd/MM/yyyy'}}</td>
+                <td>{{distribution.startDate | date : 'dd/MM/yyyy HH:mm'}}</td>
                 <td>
                     <div *ngIf="distribution.placeId">
                         <a [routerLink]="['../distribution-place', distribution.placeId , 'view' ]" >{{distribution.placeName}}</a>

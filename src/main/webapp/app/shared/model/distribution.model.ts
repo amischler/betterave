@@ -6,6 +6,8 @@ export interface IDistribution {
     id?: number;
     date?: Moment;
     text?: any;
+    endDate?: Moment;
+    startDate?: Moment;
     comments?: IComment[];
     placeName?: string;
     placeId?: number;
@@ -17,6 +19,8 @@ export class Distribution implements IDistribution {
         public id?: number,
         public date?: Moment,
         public text?: any,
+        public endDate?: Moment,
+        public startDate?: Moment,
         public comments?: IComment[],
         public placeName?: string,
         public placeId?: number,

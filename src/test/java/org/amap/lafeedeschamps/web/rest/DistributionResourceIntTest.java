@@ -26,11 +26,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.time.Instant;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +60,12 @@ public class DistributionResourceIntTest {
     private static final String DEFAULT_TEXT = "AAAAAAAAAA";
     private static final String UPDATED_TEXT = "BBBBBBBBBB";
 
+    private static final Instant DEFAULT_END_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_END_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final Instant DEFAULT_START_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_START_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
     @Autowired
     private DistributionRepository distributionRepository;
 
@@ -68,6 +77,9 @@ public class DistributionResourceIntTest {
 
     @Mock
     private DistributionService distributionServiceMock;
+
+    @Mock
+    private UserService userServiceMock;
 
     @Autowired
     private DistributionService distributionService;
@@ -115,7 +127,9 @@ public class DistributionResourceIntTest {
     public static Distribution createEntity(EntityManager em) {
         Distribution distribution = new Distribution()
             .date(DEFAULT_DATE)
-            .text(DEFAULT_TEXT);
+            .text(DEFAULT_TEXT)
+            .endDate(DEFAULT_END_DATE)
+            .startDate(DEFAULT_START_DATE);
         return distribution;
     }
 
@@ -142,6 +156,8 @@ public class DistributionResourceIntTest {
         Distribution testDistribution = distributionList.get(distributionList.size() - 1);
         assertThat(testDistribution.getDate()).isEqualTo(DEFAULT_DATE);
         assertThat(testDistribution.getText()).isEqualTo(DEFAULT_TEXT);
+        assertThat(testDistribution.getEndDate()).isEqualTo(DEFAULT_END_DATE);
+        assertThat(testDistribution.getStartDate()).isEqualTo(DEFAULT_START_DATE);
     }
 
     @Test
@@ -176,12 +192,14 @@ public class DistributionResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(distribution.getId().intValue())))
             .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
-            .andExpect(jsonPath("$.[*].text").value(hasItem(DEFAULT_TEXT.toString())));
+            .andExpect(jsonPath("$.[*].text").value(hasItem(DEFAULT_TEXT.toString())))
+            .andExpect(jsonPath("$.[*].endDate").value(hasItem(DEFAULT_END_DATE.toString())))
+            .andExpect(jsonPath("$.[*].startDate").value(hasItem(DEFAULT_START_DATE.toString())));
     }
     
     @SuppressWarnings({"unchecked"})
     public void getAllDistributionsWithEagerRelationshipsIsEnabled() throws Exception {
-        DistributionResource distributionResource = new DistributionResource(distributionServiceMock, userService);
+        DistributionResource distributionResource = new DistributionResource(distributionServiceMock, userServiceMock);
         when(distributionServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         MockMvc restDistributionMockMvc = MockMvcBuilders.standaloneSetup(distributionResource)
@@ -198,7 +216,7 @@ public class DistributionResourceIntTest {
 
     @SuppressWarnings({"unchecked"})
     public void getAllDistributionsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        DistributionResource distributionResource = new DistributionResource(distributionServiceMock, userService);
+        DistributionResource distributionResource = new DistributionResource(distributionServiceMock, userServiceMock);
             when(distributionServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
             MockMvc restDistributionMockMvc = MockMvcBuilders.standaloneSetup(distributionResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
@@ -224,7 +242,9 @@ public class DistributionResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(distribution.getId().intValue()))
             .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()))
-            .andExpect(jsonPath("$.text").value(DEFAULT_TEXT.toString()));
+            .andExpect(jsonPath("$.text").value(DEFAULT_TEXT.toString()))
+            .andExpect(jsonPath("$.endDate").value(DEFAULT_END_DATE.toString()))
+            .andExpect(jsonPath("$.startDate").value(DEFAULT_START_DATE.toString()));
     }
 
     @Test
@@ -249,7 +269,9 @@ public class DistributionResourceIntTest {
         em.detach(updatedDistribution);
         updatedDistribution
             .date(UPDATED_DATE)
-            .text(UPDATED_TEXT);
+            .text(UPDATED_TEXT)
+            .endDate(UPDATED_END_DATE)
+            .startDate(UPDATED_START_DATE);
         DistributionDTO distributionDTO = distributionMapper.toDto(updatedDistribution);
 
         restDistributionMockMvc.perform(put("/api/distributions")
@@ -263,6 +285,8 @@ public class DistributionResourceIntTest {
         Distribution testDistribution = distributionList.get(distributionList.size() - 1);
         assertThat(testDistribution.getDate()).isEqualTo(UPDATED_DATE);
         assertThat(testDistribution.getText()).isEqualTo(UPDATED_TEXT);
+        assertThat(testDistribution.getEndDate()).isEqualTo(UPDATED_END_DATE);
+        assertThat(testDistribution.getStartDate()).isEqualTo(UPDATED_START_DATE);
     }
 
     @Test

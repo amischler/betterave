@@ -53,7 +53,7 @@ public interface DistributionService {
      */
     void delete(Long id);
 
-    Page<DistributionDTO> findByDates(LocalDate fromDate, LocalDate toDate, Pageable pageable);
+    Page<DistributionDTO> findByDates(Instant fromDate, Instant toDate, Pageable pageable);
 
-    Page<DistributionDTO> findByDatesAndPlaceId(LocalDate fromDate, LocalDate toDate, Long placeId, Pageable pageable);
+    Page<DistributionDTO> findByDatesAndPlaceId(Instant fromDate, Instant toDate, Long placeId, Pageable pageable);
 }

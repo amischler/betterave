@@ -98,14 +98,14 @@ public class DistributionServiceImpl implements DistributionService {
     }
 
     @Override
-    public Page<DistributionDTO> findByDates(LocalDate fromDate, LocalDate toDate, Pageable pageable) {
-        return distributionRepository.findAllByDateBetweenOrderByDate(fromDate, toDate, pageable)
+    public Page<DistributionDTO> findByDates(Instant fromDate, Instant toDate, Pageable pageable) {
+        return distributionRepository.findAllByStartDateBetweenOrderByStartDate(fromDate, toDate, pageable)
             .map(distributionMapper::toDto);
     }
 
     @Override
-    public Page<DistributionDTO> findByDatesAndPlaceId(LocalDate fromDate, LocalDate toDate, Long placeId, Pageable pageable) {
-        return distributionRepository.findAllByDateBetweenAndPlaceIdOrderByDate(fromDate, toDate, placeId, pageable)
+    public Page<DistributionDTO> findByDatesAndPlaceId(Instant fromDate, Instant toDate, Long placeId, Pageable pageable) {
+        return distributionRepository.findAllByStartDateBetweenAndPlaceIdOrderByStartDate(fromDate, toDate, placeId, pageable)
             .map(distributionMapper::toDto);
     }
 

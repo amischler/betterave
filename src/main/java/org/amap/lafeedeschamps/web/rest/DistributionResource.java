@@ -80,7 +80,8 @@ public class DistributionResource {
         }
         for (int i = 0; i < 52; i++) {
             distributionService.save(distributionDTO);
-            distributionDTO.setDate(distributionDTO.getDate().plusDays(7));
+            distributionDTO.setStartDate(distributionDTO.getStartDate().atZone(ZoneId.systemDefault()).plusDays(7).toInstant());
+            distributionDTO.setEndDate(distributionDTO.getEndDate().atZone(ZoneId.systemDefault()).plusDays(7).toInstant());
         }
         return ResponseEntity.created(new URI("/api/distributions/"))
             .headers(HeaderUtil.createAlert("Multiple distributions created", null))
@@ -147,14 +148,14 @@ public class DistributionResource {
         Page<DistributionDTO> page = null;
         if (!"undefined".equals(placeId) && !"null".equals(placeId)) {
             page = distributionService.findByDatesAndPlaceId(
-                fromDate.atStartOfDay(ZoneId.systemDefault()).toLocalDate(),
-                toDate.atStartOfDay(ZoneId.systemDefault()).plusDays(1).toLocalDate(),
+                fromDate.atStartOfDay(ZoneId.systemDefault()).toInstant(),
+                toDate.atStartOfDay(ZoneId.systemDefault()).plusDays(1).toInstant(),
                 Long.valueOf(placeId),
                 pageable);
         } else {
             page = distributionService.findByDates(
-                fromDate.atStartOfDay(ZoneId.systemDefault()).toLocalDate(),
-                toDate.atStartOfDay(ZoneId.systemDefault()).plusDays(1).toLocalDate(),
+                fromDate.atStartOfDay(ZoneId.systemDefault()).toInstant(),
+                toDate.atStartOfDay(ZoneId.systemDefault()).plusDays(1).toInstant(),
                 pageable);
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/distributions");

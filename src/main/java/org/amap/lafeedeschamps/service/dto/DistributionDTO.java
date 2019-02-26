@@ -1,4 +1,5 @@
 package org.amap.lafeedeschamps.service.dto;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -17,6 +18,10 @@ public class DistributionDTO implements Serializable {
 
     @Lob
     private String text;
+
+    private Instant endDate;
+
+    private Instant startDate;
 
 
     private Long placeId;
@@ -47,6 +52,22 @@ public class DistributionDTO implements Serializable {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Instant getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Instant endDate) {
+        this.endDate = endDate;
+    }
+
+    public Instant getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Instant startDate) {
+        this.startDate = startDate;
     }
 
     public Long getPlaceId() {
@@ -100,6 +121,8 @@ public class DistributionDTO implements Serializable {
             "id=" + getId() +
             ", date='" + getDate() + "'" +
             ", text='" + getText() + "'" +
+            ", endDate='" + getEndDate() + "'" +
+            ", startDate='" + getStartDate() + "'" +
             ", place=" + getPlaceId() +
             ", place='" + getPlaceName() + "'" +
             "}";

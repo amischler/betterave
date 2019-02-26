@@ -9,6 +9,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,6 +36,12 @@ public class Distribution implements Serializable {
     @Lob
     @Column(name = "text")
     private String text;
+
+    @Column(name = "end_date")
+    private Instant endDate;
+
+    @Column(name = "start_date")
+    private Instant startDate;
 
     @OneToMany(mappedBy = "distribution")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -83,6 +90,32 @@ public class Distribution implements Serializable {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Instant getEndDate() {
+        return endDate;
+    }
+
+    public Distribution endDate(Instant endDate) {
+        this.endDate = endDate;
+        return this;
+    }
+
+    public void setEndDate(Instant endDate) {
+        this.endDate = endDate;
+    }
+
+    public Instant getStartDate() {
+        return startDate;
+    }
+
+    public Distribution startDate(Instant startDate) {
+        this.startDate = startDate;
+        return this;
+    }
+
+    public void setStartDate(Instant startDate) {
+        this.startDate = startDate;
     }
 
     public Set<Comment> getComments() {
@@ -173,6 +206,8 @@ public class Distribution implements Serializable {
             "id=" + getId() +
             ", date='" + getDate() + "'" +
             ", text='" + getText() + "'" +
+            ", endDate='" + getEndDate() + "'" +
+            ", startDate='" + getStartDate() + "'" +
             "}";
     }
 }

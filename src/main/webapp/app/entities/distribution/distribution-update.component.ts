@@ -4,6 +4,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import * as moment from 'moment';
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { JhiAlertService, JhiDataUtils } from 'ng-jhipster';
 import { IDistribution } from 'app/shared/model/distribution.model';
 import { DistributionService } from './distribution.service';
@@ -24,6 +25,8 @@ export class DistributionUpdateComponent implements OnInit {
 
     users: IUser[];
     dateDp: any;
+    endDate: string;
+    startDate: string;
 
     constructor(
         protected dataUtils: JhiDataUtils,
@@ -38,6 +41,8 @@ export class DistributionUpdateComponent implements OnInit {
         this.isSaving = false;
         this.activatedRoute.data.subscribe(({ distribution }) => {
             this.distribution = distribution;
+            this.endDate = this.distribution.endDate != null ? this.distribution.endDate.format(DATE_TIME_FORMAT) : null;
+            this.startDate = this.distribution.startDate != null ? this.distribution.startDate.format(DATE_TIME_FORMAT) : null;
         });
         this.distributionPlaceService
             .query()
@@ -76,6 +81,8 @@ export class DistributionUpdateComponent implements OnInit {
 
     save() {
         this.isSaving = true;
+        this.distribution.endDate = this.endDate != null ? moment(this.endDate, DATE_TIME_FORMAT) : null;
+        this.distribution.startDate = this.startDate != null ? moment(this.startDate, DATE_TIME_FORMAT) : null;
         if (this.distribution.id !== undefined) {
             this.subscribeToSaveResponse(this.distributionService.update(this.distribution));
         } else {
