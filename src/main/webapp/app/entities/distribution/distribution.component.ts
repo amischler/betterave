@@ -218,4 +218,8 @@ export class DistributionComponent implements OnInit, OnDestroy {
     }
 
     onCommentError(message) {}
+
+    trackDistributionPlaceById(index: number, item: IDistributionPlace) {
+        return item.id;
+    }
 }
