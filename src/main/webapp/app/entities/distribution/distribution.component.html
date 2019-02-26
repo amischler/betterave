@@ -66,10 +66,18 @@
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
-                                [routerLink]="['/distribution', distribution.id, 'view' ]"
-                                class="btn btn-info btn-sm">
-                            <fa-icon [icon]="'eye'"></fa-icon>
-                            <span class="d-none d-md-inline">Détails</span>
+                                *ngIf = "canSubscribe(distribution)"
+                                (click)="subscribe(distribution.id)"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'check'"></fa-icon>
+                            <span class="d-none d-md-inline">S'inscrire</span>
+                        </button>
+                        <button type="submit"
+                                *ngIf = "canUnsubscribe(distribution)"
+                                (click)="unsubscribe(distribution.id)"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Se désinscrire</span>
                         </button>
                         <button *jhiHasAnyAuthority="'ROLE_ADMIN'" type="submit"
                                 [routerLink]="['/distribution', distribution.id, 'edit']"
@@ -90,23 +98,15 @@
                                 skipLocationChange="true"
                                 queryParamsHandling="merge"
                                 type="submit"
-                                class="btn btn-primary">
+                                class="btn btn-secondary">
                             <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span> Commenter</span>
                         </button>
                         <button type="submit"
-                                *ngIf = "canSubscribe(distribution)"
-                                (click)="subscribe(distribution.id)"
-                                class="btn btn-primary btn-sm">
-                            <fa-icon [icon]="'check'"></fa-icon>
-                            <span class="d-none d-md-inline">S'inscrire</span>
-                        </button>
-                        <button type="submit"
-                                *ngIf = "canUnsubscribe(distribution)"
-                                (click)="unsubscribe(distribution.id)"
-                                class="btn btn-danger btn-sm">
-                            <fa-icon [icon]="'times'"></fa-icon>
-                            <span class="d-none d-md-inline">Se désinscrire</span>
+                                [routerLink]="['/distribution', distribution.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">Détails</span>
                         </button>
                     </div>
                 </td>
