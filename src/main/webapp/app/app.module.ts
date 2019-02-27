@@ -17,6 +17,11 @@ import { BetteraveHomeModule } from './home/home.module';
 import { BetteraveAccountModule } from './account/account.module';
 import { BetteraveEntityModule } from './entities/entity.module';
 import * as moment from 'moment';
+import { LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+registerLocaleData(localeFr, 'fr');
+
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ErrorComponent } from './layouts';
 
@@ -53,6 +58,10 @@ import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent
             provide: HTTP_INTERCEPTORS,
             useClass: NotificationInterceptor,
             multi: true
+        },
+        {
+            provide: LOCALE_ID,
+            useValue: 'fr'
         }
     ],
     bootstrap: [JhiMainComponent]

@@ -1,9 +1,11 @@
 <div>
     <h2 id="page-heading">
         <span>Distributions</span>
-        <button *jhiHasAnyAuthority="'ROLE_ADMIN'" id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-distribution" [routerLink]="['/distribution/new']">
+        <button *jhiHasAnyAuthority="'ROLE_ADMIN'" id="jh-create-entity"
+                class="btn btn-primary float-right jh-create-entity create-distribution"
+                [routerLink]="['/distribution/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
-            <span >
+            <span>
             Create new Distribution
             </span>
         </button>
@@ -17,101 +19,106 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">Du</span>
                 </div>
-                <input type="date" class="form-control" name="start" [(ngModel)]="fromDate" (ngModelChange)="transition()" required/>
+                <input type="date" class="form-control" name="start" [(ngModel)]="fromDate"
+                       (ngModelChange)="transition()" required/>
 
                 <div class="input-group-append">
                     <span class="input-group-text">Au</span>
                 </div>
-                <input type="date" class="form-control" name="end" [(ngModel)]="toDate" (ngModelChange)="transition()" required/>
+                <input type="date" class="form-control" name="end" [(ngModel)]="toDate" (ngModelChange)="transition()"
+                       required/>
                 <div class="input-group-append">
                     <span class="input-group-text">à</span>
                 </div>
-                <select class="form-control" id="field_place" name="place" [(ngModel)]="placeId" (ngModelChange)="transition()">
+                <select class="form-control" id="field_place" name="place" [(ngModel)]="placeId"
+                        (ngModelChange)="transition()">
                     <option [ngValue]="null"></option>
-                    <option [ngValue]="distributionPlaceOption.id" *ngFor="let distributionPlaceOption of distributionplaces; trackBy: trackDistributionPlaceById">{{distributionPlaceOption.name}}</option>
+                    <option [ngValue]="distributionPlaceOption.id"
+                            *ngFor="let distributionPlaceOption of distributionplaces; trackBy: trackDistributionPlaceById">
+                        {{distributionPlaceOption.name}}
+                    </option>
                 </select>
             </div>
         </div>
     </div>
-    <div class="table-responsive" *ngIf="distributions">
-        <table class="table table-striped">
-            <thead>
-            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
-            <th *jhiHasAnyAuthority="'ROLE_ADMIN'" jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="date"><span>Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="placeName"><span>Lieu de distribution</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="users"><span>Amapiens</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="text"><span>Détails</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="comments"><span>Commentaires</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th></th>
-            </tr>
-            </thead>
-            <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
-            <tr *ngFor="let distribution of distributions ;trackBy: trackId">
-                <td *jhiHasAnyAuthority="'ROLE_ADMIN'"><a [routerLink]="['/distribution', distribution.id, 'view' ]">{{distribution.id}}</a></td>
-                <td>{{distribution.startDate | date : 'dd/MM/yyyy HH:mm'}}</td>
-                <td>
-                    <div *ngIf="distribution.placeId">
-                        <a [routerLink]="['../distribution-place', distribution.placeId , 'view' ]" >{{distribution.placeName}}</a>
-                    </div>
-                </td>
-                <td>
+    <div infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']"
+         [infiniteScrollDistance]="0" *ngIf="distributions">
+        <div *ngFor="let distribution of distributions ;trackBy: trackId" class="card mt-1">
+            <h5 class="card-header">
+                <span *jhiHasAnyAuthority="'ROLE_ADMIN'"><a [routerLink]="['/distribution', distribution.id, 'view' ]">{{distribution.id}} - </a></span>
+                {{distribution.startDate | date : 'd MMMM à HH:mm'}}
+                <span *ngIf="distribution.placeId">
+                    - {{distribution.placeName}}
+                </span>
+            </h5>
+            <div class="card-body">
+                <p class="card-text">
+                    <span *ngIf="distribution.users.length">
+                        Inscrits :
+                    </span>
                     <span *ngFor="let users of distribution.users; let last = last">
                         {{users.login}}{{last ? '' : ', '}}
                     </span>
+                    <span *ngIf="!distribution.users.length">
+                        Aucun inscrit !
+                    </span>
                     <span class="badge-pill badge-primary">{{distribution.users.length}}</span>
-                </td>
-                <td>{{preview(distribution.text, 50)}}</td>
-                <td><span *ngFor="let comment of distribution.comments; let last = last" class="badge badge-pill badge-light">{{comment.user.login}} <span class="font-weight-light text-wrap text-left">{{comment.text}}</span></span></td>
-                <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
-                        <button type="submit"
-                                *ngIf = "canSubscribe(distribution)"
-                                (click)="subscribe(distribution.id)"
-                                class="btn btn-primary btn-sm">
-                            <fa-icon [icon]="'check'"></fa-icon>
-                            <span class="d-none d-md-inline">S'inscrire</span>
-                        </button>
-                        <button type="submit"
-                                *ngIf = "canUnsubscribe(distribution)"
-                                (click)="unsubscribe(distribution.id)"
-                                class="btn btn-danger btn-sm">
-                            <fa-icon [icon]="'times'"></fa-icon>
-                            <span class="d-none d-md-inline">Se désinscrire</span>
-                        </button>
-                        <button *jhiHasAnyAuthority="'ROLE_ADMIN'" type="submit"
-                                [routerLink]="['/distribution', distribution.id, 'edit']"
-                                class="btn btn-primary btn-sm">
-                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
-                            <span class="d-none d-md-inline">Editer</span>
-                        </button>
-                        <button *jhiHasAnyAuthority="'ROLE_ADMIN'" type="submit"
-                                [routerLink]="['/', 'distribution', { outlets: { popup: distribution.id + '/delete'} }]"
-                                replaceUrl="true"
-                                queryParamsHandling="merge"
-                                class="btn btn-danger btn-sm">
-                            <fa-icon [icon]="'times'"></fa-icon>
-                            <span class="d-none d-md-inline">Supprimer</span>
-                        </button>
-                        <button type="button"
-                                [routerLink]="['/', 'distribution', { outlets: { popup:  distribution.id + '/comment/new'} }]"
-                                skipLocationChange="true"
-                                queryParamsHandling="merge"
-                                type="submit"
-                                class="btn btn-secondary">
-                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
-                            <span> Commenter</span>
-                        </button>
-                        <button type="submit"
-                                [routerLink]="['/distribution', distribution.id, 'view' ]"
-                                class="btn btn-info btn-sm">
-                            <fa-icon [icon]="'eye'"></fa-icon>
-                            <span class="d-none d-md-inline">Détails</span>
-                        </button>
+                </p>
+                <p class="card-text">
+                    {{preview(distribution.text, 100)}}
+                </p>
+                <p class="card-text">
+                    <div *ngFor="let comment of distribution.comments; let last = last"
+                         class="badge badge-pill badge-light">
+                        {{comment.user.login}} <span class="font-weight-light text-wrap text-left">{{comment.text}}</span>
                     </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                </p>
+            </div>
+            <div class="card-footer btn-group flex-btn-group-container">
+                <button type="submit"
+                        *ngIf="canSubscribe(distribution)"
+                        (click)="subscribe(distribution.id)"
+                        class="btn btn-primary btn-sm">
+                    <fa-icon [icon]="'check'"></fa-icon>
+                    <span class="">S'inscrire</span>
+                </button>
+                <button type="submit"
+                        *ngIf="canUnsubscribe(distribution)"
+                        (click)="unsubscribe(distribution.id)"
+                        class="btn btn-danger btn-sm">
+                    <fa-icon [icon]="'times'"></fa-icon>
+                    <span class="">Se désinscrire</span>
+                </button>
+                <button *jhiHasAnyAuthority="'ROLE_ADMIN'" type="submit"
+                        [routerLink]="['/distribution', distribution.id, 'edit']"
+                        class="btn btn-primary btn-sm">
+                    <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                    <span class="d-none d-md-inline">Editer</span>
+                </button>
+                <button *jhiHasAnyAuthority="'ROLE_ADMIN'" type="submit"
+                        [routerLink]="['/', 'distribution', { outlets: { popup: distribution.id + '/delete'} }]"
+                        replaceUrl="true"
+                        queryParamsHandling="merge"
+                        class="btn btn-danger btn-sm">
+                    <fa-icon [icon]="'times'"></fa-icon>
+                    <span class="d-none d-md-inline">Supprimer</span>
+                </button>
+                <button type="button"
+                        [routerLink]="['/', 'distribution', { outlets: { popup:  distribution.id + '/comment/new'} }]"
+                        skipLocationChange="true"
+                        queryParamsHandling="merge"
+                        type="submit"
+                        class="btn btn-secondary">
+                    <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                    <span class="d-none d-md-inline"> Commenter</span>
+                </button>
+                <button type="submit"
+                        [routerLink]="['/distribution', distribution.id, 'view' ]"
+                        class="btn btn-info btn-sm">
+                    <fa-icon [icon]="'eye'"></fa-icon>
+                    <span class="d-none d-md-inline">Détails</span>
+                </button>
+            </div>
+        </div>
     </div>
 </div>

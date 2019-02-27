@@ -143,22 +143,20 @@ export class DistributionComponent implements OnInit, OnDestroy {
 
     subscribe(distributionId) {
         this.distributionService.subscribe(distributionId).subscribe(
-            (res: HttpResponse<IDistribution[]>) =>
-                this.eventManager.broadcast({
-                    name: 'distributionListModification',
-                    content: 'Subscribed to a distribution'
-                }),
+            (res: HttpResponse<IDistribution>) => {
+                const old = this.distributions.find(d => d.id === res.body.id);
+                this.distributions[this.distributions.indexOf(old)].users = res.body.users;
+            },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
 
     unsubscribe(distributionId) {
         this.distributionService.unsubscribe(distributionId).subscribe(
-            (res: HttpResponse<IDistribution[]>) =>
-                this.eventManager.broadcast({
-                    name: 'distributionListModification',
-                    content: 'Unsubscribed from a distribution'
-                }),
+            (res: HttpResponse<IDistribution>) => {
+                const old = this.distributions.find(d => d.id === res.body.id);
+                this.distributions[this.distributions.indexOf(old)].users = res.body.users;
+            },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
     }

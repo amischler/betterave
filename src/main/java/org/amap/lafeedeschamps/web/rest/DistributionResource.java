@@ -206,8 +206,6 @@ public class DistributionResource {
             }
             distribution = distributionService.save(distribution);
             return ResponseEntity.ok()
-                .headers(HeaderUtil.createAlert("Merci pour votre inscription à la distribution !",
-                    distribution.getId().toString()))
                 .body(distribution);
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
@@ -234,8 +232,6 @@ public class DistributionResource {
             }
             distribution = distributionService.save(distribution);
             return ResponseEntity.ok()
-                .headers(HeaderUtil.createAlert("Votre désinscription a bien été enregistrée",
-                    distribution.getId().toString()))
                 .body(distribution);
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);

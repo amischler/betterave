@@ -54,7 +54,6 @@ public class CommentResource {
         user.ifPresent(u -> commentDTO.setUserId(u.getId()));
         CommentDTO result = commentService.save(commentDTO);
         return ResponseEntity.created(new URI("/api/comments/" + result.getId()))
-            .headers(HeaderUtil.createAlert("Votre commentaire a bien été enregistré", result.getId().toString()))
             .body(result);
     }
 
@@ -75,7 +74,6 @@ public class CommentResource {
         }
         CommentDTO result = commentService.save(commentDTO);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, commentDTO.getId().toString()))
             .body(result);
     }
 

@@ -19,7 +19,7 @@
                     </span>
                 </dd>
                 <dd *ngFor="let comment of comments;">
-                    <span class="badge badge-pill badge-light">{{comment.user.login}} <span class="font-weight-light">{{comment.text}}</span>
+                    <span class="badge badge-pill badge-light">{{comment.user.login}} <span class="font-weight-light text-wrap text-left">{{comment.text}}</span>
                         <div class="btn-group">
                         <button type="button"
                             *ngIf="canEditComment(comment)"
