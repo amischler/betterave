@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{email.reminder.title}">Distribution</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="shortcut icon" th:href="@{|${baseUrl}/favicon.ico|}"/>
+</head>
+<body>
+<p th:text="#{email.reminder.greeting(${user.login})}">
+    Bonjour
+</p>
+<p th:text="#{email.reminder.text1(${distribution.startDate})}">
+    Petit rappel : tu t'es inscrit pour la distribution de demain :
+</p>
+<p>
+    <a th:with="url=(@{|${baseUrl}/#/distribution/${distribution.id}/view|})" th:href="${url}"
+       th:text="Détails">Détails</a>
+</p>
+<p>
+    <span th:text="#{email.reminder.text2}">A bientôt</span>
+    <br/>
+    <em th:text="#{email.signature}">L'équipe de l'AMAP.</em>
+</p>
+</body>
+</html>

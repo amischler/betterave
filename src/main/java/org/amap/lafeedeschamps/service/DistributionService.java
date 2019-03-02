@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -54,6 +55,8 @@ public interface DistributionService {
     void delete(Long id);
 
     Page<DistributionDTO> findByDates(Instant fromDate, Instant toDate, Pageable pageable);
+
+    List<DistributionDTO> findByDates(Instant fromDate, Instant toDate);
 
     Page<DistributionDTO> findByDatesAndPlaceId(Instant fromDate, Instant toDate, Long placeId, Pageable pageable);
 }

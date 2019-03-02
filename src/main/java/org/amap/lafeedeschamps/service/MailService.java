@@ -1,13 +1,8 @@
 package org.amap.lafeedeschamps.service;
 
-import org.amap.lafeedeschamps.domain.User;
-
 import io.github.jhipster.config.JHipsterProperties;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Locale;
-import javax.mail.internet.MimeMessage;
-
+import org.amap.lafeedeschamps.domain.User;
+import org.amap.lafeedeschamps.service.dto.DistributionDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -17,6 +12,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
+
+import javax.mail.internet.MimeMessage;
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 
 /**
  * Service for sending emails.
@@ -30,6 +29,8 @@ public class MailService {
 
     private static final String USER = "user";
 
+    private static final String DISTRIBUTION = "distribution";
+
     private static final String BASE_URL = "baseUrl";
 
     private final JHipsterProperties jHipsterProperties;
@@ -41,7 +42,7 @@ public class MailService {
     private final SpringTemplateEngine templateEngine;
 
     public MailService(JHipsterProperties jHipsterProperties, JavaMailSender javaMailSender,
-            MessageSource messageSource, SpringTemplateEngine templateEngine) {
+                       MessageSource messageSource, SpringTemplateEngine templateEngine) {
 
         this.jHipsterProperties = jHipsterProperties;
         this.javaMailSender = javaMailSender;
@@ -75,14 +76,23 @@ public class MailService {
 
     @Async
     public void sendEmailFromTemplate(User user, String templateName, String titleKey) {
+        sendEmailFromTemplate(user, templateName, titleKey, createDefaultContext(user));
+    }
+
+    @Async
+    public void sendEmailFromTemplate(User user, String templateName, String titleKey, Context context) {
+        Locale locale = Locale.forLanguageTag(user.getLangKey());
+        String content = templateEngine.process(templateName, context);
+        String subject = messageSource.getMessage(titleKey, null, locale);
+        sendEmail(user.getEmail(), subject, content, false, true);
+    }
+
+    protected Context createDefaultContext(User user) {
         Locale locale = Locale.forLanguageTag(user.getLangKey());
         Context context = new Context(locale);
         context.setVariable(USER, user);
         context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl());
-        String content = templateEngine.process(templateName, context);
-        String subject = messageSource.getMessage(titleKey, null, locale);
-        sendEmail(user.getEmail(), subject, content, false, true);
-
+        return context;
     }
 
     @Async
@@ -102,4 +112,13 @@ public class MailService {
         log.debug("Sending password reset email to '{}'", user.getEmail());
         sendEmailFromTemplate(user, "mail/passwordResetEmail", "email.reset.title");
     }
+
+    @Async
+    public void sendReminderEmail(User user, DistributionDTO distributionDTO) {
+        log.debug("Sending reminder email to {}", user.getEmail());
+        Context context = createDefaultContext(user);
+        context.setVariable(DISTRIBUTION, distributionDTO);
+        sendEmailFromTemplate(user, "mail/distributionReminderEmail", "email.reminder.title", context);
+    }
+
 }

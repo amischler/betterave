@@ -14,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing Distribution.
@@ -101,6 +103,12 @@ public class DistributionServiceImpl implements DistributionService {
     public Page<DistributionDTO> findByDates(Instant fromDate, Instant toDate, Pageable pageable) {
         return distributionRepository.findAllByStartDateBetweenOrderByStartDate(fromDate, toDate, pageable)
             .map(distributionMapper::toDto);
+    }
+
+    @Override
+    public List<DistributionDTO> findByDates(Instant fromDate, Instant toDate) {
+        return distributionRepository.findAllByStartDateBetweenOrderByStartDate(fromDate, toDate)
+            .stream().map(distributionMapper::toDto).collect(Collectors.toList());
     }
 
     @Override

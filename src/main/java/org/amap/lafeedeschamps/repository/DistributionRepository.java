@@ -36,4 +36,6 @@ public interface DistributionRepository extends JpaRepository<Distribution, Long
 
     Page<Distribution> findAllByStartDateBetweenOrderByStartDate(Instant fromDate, Instant toDate, Pageable pageable);
 
+    List<Distribution> findAllByStartDateBetweenOrderByStartDate(Instant fromDate, Instant toDate);
+
 }
