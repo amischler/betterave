@@ -4,15 +4,17 @@
             <h1 *ngSwitchCase="false" class="display-4">Bienvenue !</h1>
             <h1 *ngSwitchCase="true">Bienvenue, {{account.login}}</h1>
             <p class="lead">Plateforme de gestion de l'AMAP la Fée des Champs</p>
-            <p  *ngSwitchCase="true">
+            <p *ngSwitchCase="true">
                 Voir les prochaines <a class="alert-link" routerLink="distribution">distributions</a>
             </p>
-            <p>
-                <button type="button" class="btn btn-primary" (click)="login()">Se connecter</button>
-            </p>
-            <div class="alert alert-warning" *ngSwitchCase="false">
-                <span>Vous n'avez pas encore de compte ? Votre compte vous permettra de vous inscrire aux distributions et ateliers de l'AMAP.</span>&nbsp;
-                <a class="alert-link" routerLink="register">Créer mon compte</a>
+            <div *ngSwitchCase="false">
+                <p>
+                    <button type="button" class="btn btn-primary" (click)="login()">Se connecter</button>
+                </p>
+                <div class="alert alert-warning">
+                    <span>Vous n'avez pas encore de compte ? Votre compte vous permettra de vous inscrire aux distributions et ateliers de l'AMAP.</span>&nbsp;
+                    <a class="alert-link" routerLink="register">Créer mon compte</a>
+                </div>
             </div>
         </div>
     </div>
