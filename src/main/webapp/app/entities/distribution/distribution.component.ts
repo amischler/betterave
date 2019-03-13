@@ -14,6 +14,7 @@ import { IDistributionPlace } from 'app/shared/model/distribution-place.model';
 import { DistributionPlaceService } from 'app/entities/distribution-place';
 import { CommentService } from 'app/entities/comment/comment.service';
 import { IComment } from 'app/shared/model/comment.model';
+import { LocalStorageService } from 'angular-2-local-storage';
 
 @Component({
     selector: 'jhi-distribution',
@@ -43,7 +44,8 @@ export class DistributionComponent implements OnInit, OnDestroy {
         protected parseLinks: JhiParseLinks,
         protected accountService: AccountService,
         protected commentService: CommentService,
-        private datePipe: DatePipe
+        private datePipe: DatePipe,
+        private localStorageService: LocalStorageService
     ) {
         this.distributions = [];
         this.itemsPerPage = ITEMS_PER_PAGE;
@@ -56,6 +58,7 @@ export class DistributionComponent implements OnInit, OnDestroy {
     }
 
     loadAll() {
+        this.localStorageService.set('defaultPlaceId', this.placeId);
         this.distributionService
             .query({
                 page: this.page,
@@ -85,6 +88,7 @@ export class DistributionComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.today();
         this.nextYear();
+        this.placeId = this.localStorageService.get('defaultPlaceId');
         this.loadAll();
         this.accountService.identity().then(account => {
             this.currentAccount = account;

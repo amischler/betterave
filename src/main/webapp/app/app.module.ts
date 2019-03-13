@@ -21,6 +21,7 @@ import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeFr, 'fr');
+import { LocalStorageModule } from 'angular-2-local-storage';
 
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ErrorComponent } from './layouts';
@@ -40,7 +41,11 @@ import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent
         BetteraveAccountModule,
         // jhipster-needle-angular-add-module JHipster will add new module here
         BetteraveEntityModule,
-        BetteraveAppRoutingModule
+        BetteraveAppRoutingModule,
+        LocalStorageModule.forRoot({
+            prefix: 'betterave',
+            storageType: 'localStorage'
+        })
     ],
     declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent],
     providers: [
