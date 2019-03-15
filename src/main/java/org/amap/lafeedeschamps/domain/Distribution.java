@@ -43,6 +43,9 @@ public class Distribution implements Serializable {
     @Column(name = "start_date")
     private Instant startDate;
 
+    @Column(name = "min_users")
+    private Integer minUsers;
+
     @OneToMany(mappedBy = "distribution")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Comment> comments = new HashSet<>();
@@ -116,6 +119,19 @@ public class Distribution implements Serializable {
 
     public void setStartDate(Instant startDate) {
         this.startDate = startDate;
+    }
+
+    public Integer getMinUsers() {
+        return minUsers;
+    }
+
+    public Distribution minUsers(Integer minUsers) {
+        this.minUsers = minUsers;
+        return this;
+    }
+
+    public void setMinUsers(Integer minUsers) {
+        this.minUsers = minUsers;
     }
 
     public Set<Comment> getComments() {
@@ -208,6 +224,7 @@ public class Distribution implements Serializable {
             ", text='" + getText() + "'" +
             ", endDate='" + getEndDate() + "'" +
             ", startDate='" + getStartDate() + "'" +
+            ", minUsers=" + getMinUsers() +
             "}";
     }
 }

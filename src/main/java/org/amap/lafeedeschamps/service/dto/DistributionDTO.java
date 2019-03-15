@@ -23,6 +23,8 @@ public class DistributionDTO implements Serializable {
 
     private Instant startDate;
 
+    private Integer minUsers;
+
 
     private Long placeId;
 
@@ -68,6 +70,14 @@ public class DistributionDTO implements Serializable {
 
     public void setStartDate(Instant startDate) {
         this.startDate = startDate;
+    }
+
+    public Integer getMinUsers() {
+        return minUsers;
+    }
+
+    public void setMinUsers(Integer minUsers) {
+        this.minUsers = minUsers;
     }
 
     public Long getPlaceId() {
@@ -123,6 +133,7 @@ public class DistributionDTO implements Serializable {
             ", text='" + getText() + "'" +
             ", endDate='" + getEndDate() + "'" +
             ", startDate='" + getStartDate() + "'" +
+            ", minUsers=" + getMinUsers() +
             ", place=" + getPlaceId() +
             ", place='" + getPlaceName() + "'" +
             "}";

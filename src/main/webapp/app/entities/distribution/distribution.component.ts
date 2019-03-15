@@ -224,4 +224,14 @@ export class DistributionComponent implements OnInit, OnDestroy {
     trackDistributionPlaceById(index: number, item: IDistributionPlace) {
         return item.id;
     }
+
+    getMinRequiredClasses(numberSubscribed, minRequired) {
+        if (numberSubscribed === 0) {
+            return 'badge-pill badge-danger';
+        } else if (numberSubscribed < minRequired) {
+            return 'badge-pill badge-warning';
+        } else {
+            return 'badge-pill badge-success';
+        }
+    }
 }

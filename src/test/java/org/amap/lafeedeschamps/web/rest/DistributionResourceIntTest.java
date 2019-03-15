@@ -66,6 +66,9 @@ public class DistributionResourceIntTest {
     private static final Instant DEFAULT_START_DATE = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_START_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
+    private static final Integer DEFAULT_MIN_USERS = 1;
+    private static final Integer UPDATED_MIN_USERS = 2;
+
     @Autowired
     private DistributionRepository distributionRepository;
 
@@ -129,7 +132,8 @@ public class DistributionResourceIntTest {
             .date(DEFAULT_DATE)
             .text(DEFAULT_TEXT)
             .endDate(DEFAULT_END_DATE)
-            .startDate(DEFAULT_START_DATE);
+            .startDate(DEFAULT_START_DATE)
+            .minUsers(DEFAULT_MIN_USERS);
         return distribution;
     }
 
@@ -158,6 +162,7 @@ public class DistributionResourceIntTest {
         assertThat(testDistribution.getText()).isEqualTo(DEFAULT_TEXT);
         assertThat(testDistribution.getEndDate()).isEqualTo(DEFAULT_END_DATE);
         assertThat(testDistribution.getStartDate()).isEqualTo(DEFAULT_START_DATE);
+        assertThat(testDistribution.getMinUsers()).isEqualTo(DEFAULT_MIN_USERS);
     }
 
     @Test
@@ -194,7 +199,8 @@ public class DistributionResourceIntTest {
             .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
             .andExpect(jsonPath("$.[*].text").value(hasItem(DEFAULT_TEXT.toString())))
             .andExpect(jsonPath("$.[*].endDate").value(hasItem(DEFAULT_END_DATE.toString())))
-            .andExpect(jsonPath("$.[*].startDate").value(hasItem(DEFAULT_START_DATE.toString())));
+            .andExpect(jsonPath("$.[*].startDate").value(hasItem(DEFAULT_START_DATE.toString())))
+            .andExpect(jsonPath("$.[*].minUsers").value(hasItem(DEFAULT_MIN_USERS)));
     }
     
     @SuppressWarnings({"unchecked"})
@@ -244,7 +250,8 @@ public class DistributionResourceIntTest {
             .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()))
             .andExpect(jsonPath("$.text").value(DEFAULT_TEXT.toString()))
             .andExpect(jsonPath("$.endDate").value(DEFAULT_END_DATE.toString()))
-            .andExpect(jsonPath("$.startDate").value(DEFAULT_START_DATE.toString()));
+            .andExpect(jsonPath("$.startDate").value(DEFAULT_START_DATE.toString()))
+            .andExpect(jsonPath("$.minUsers").value(DEFAULT_MIN_USERS));
     }
 
     @Test
@@ -271,7 +278,8 @@ public class DistributionResourceIntTest {
             .date(UPDATED_DATE)
             .text(UPDATED_TEXT)
             .endDate(UPDATED_END_DATE)
-            .startDate(UPDATED_START_DATE);
+            .startDate(UPDATED_START_DATE)
+            .minUsers(UPDATED_MIN_USERS);
         DistributionDTO distributionDTO = distributionMapper.toDto(updatedDistribution);
 
         restDistributionMockMvc.perform(put("/api/distributions")
@@ -287,6 +295,7 @@ public class DistributionResourceIntTest {
         assertThat(testDistribution.getText()).isEqualTo(UPDATED_TEXT);
         assertThat(testDistribution.getEndDate()).isEqualTo(UPDATED_END_DATE);
         assertThat(testDistribution.getStartDate()).isEqualTo(UPDATED_START_DATE);
+        assertThat(testDistribution.getMinUsers()).isEqualTo(UPDATED_MIN_USERS);
     }
 
     @Test
