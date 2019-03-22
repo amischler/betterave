@@ -62,7 +62,7 @@
                     <span *ngIf="!distribution.users.length">
                         Aucun inscrit !
                     </span>
-                    <span [ngClass]="getMinRequiredClasses(distribution.users.length, distribution.minUsers)">{{distribution.users.length}}/{{distribution.minUsers}} <fa-icon *ngIf="distribution.users.length == distribution.minUsers" [icon]="'check'"></fa-icon></span>
+                    <span [ngClass]="getMinRequiredClasses(distribution.users.length, distribution.minUsers)">{{distribution.users.length}}<span *ngIf="distribution.minUsers > 0">/{{distribution.minUsers}}</span> <fa-icon *ngIf="distribution.users.length == distribution.minUsers" [icon]="'check'"></fa-icon></span>
                 </p>
                 <p class="card-text">
                     {{preview(distribution.text, 100)}}

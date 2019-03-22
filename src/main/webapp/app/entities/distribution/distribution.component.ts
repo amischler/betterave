@@ -230,6 +230,8 @@ export class DistributionComponent implements OnInit, OnDestroy {
             return 'badge-pill badge-danger';
         } else if (numberSubscribed < minRequired) {
             return 'badge-pill badge-warning';
+        } else if (!minRequired) {
+            return 'badge-pill badge-primary';
         } else {
             return 'badge-pill badge-success';
         }
