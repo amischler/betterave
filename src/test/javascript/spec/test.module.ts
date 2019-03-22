@@ -11,6 +11,8 @@ import { MockActivatedRoute, MockRouter } from './helpers/mock-route.service';
 import { MockActiveModal } from './helpers/mock-active-modal.service';
 import { MockEventManager } from './helpers/mock-event-manager.service';
 
+import { LocalStorageModule } from 'angular-2-local-storage';
+
 @NgModule({
     providers: [
         DatePipe,
@@ -58,6 +60,12 @@ import { MockEventManager } from './helpers/mock-event-manager.service';
             useValue: null
         }
     ],
-    imports: [HttpClientTestingModule]
+    imports: [
+        HttpClientTestingModule,
+        LocalStorageModule.forRoot({
+            prefix: 'betterave',
+            storageType: 'localStorage'
+        })
+    ]
 })
 export class BetteraveTestModule {}
