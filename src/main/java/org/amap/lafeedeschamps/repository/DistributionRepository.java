@@ -9,11 +9,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.DoubleStream;
 
 /**
  * Spring Data  repository for the Distribution entity.
@@ -37,5 +34,7 @@ public interface DistributionRepository extends JpaRepository<Distribution, Long
     Page<Distribution> findAllByStartDateBetweenOrderByStartDate(Instant fromDate, Instant toDate, Pageable pageable);
 
     List<Distribution> findAllByStartDateBetweenOrderByStartDate(Instant fromDate, Instant toDate);
+
+    List<Distribution> findByUsers_IdOrderByStartDateDesc(@Param("userId") Long userId);
 
 }

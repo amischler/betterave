@@ -4,9 +4,67 @@
             <h1 *ngSwitchCase="false" class="display-4">Bienvenue !</h1>
             <h1 *ngSwitchCase="true">Bienvenue, {{account.login}}</h1>
             <p class="lead">Plateforme de gestion de l'AMAP la Fée des Champs</p>
-            <p *ngSwitchCase="true">
-                Voir les prochaines <a class="alert-link" routerLink="distribution">distributions</a>
-            </p>
+            <div *ngSwitchCase="true">
+                <h2>Distributions</h2>
+                <h3>Mes distributions à venir</h3>
+                <div *ngIf="futureDistributions?.length <= 0">Aucune !</div>
+                <div class="table-responsive" *ngIf="futureDistributions?.length > 0">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th><span>Date</span></th>
+                            <th><span>Lieu</span></th>
+                            <th><span>Inscrits</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let distribution of futureDistributions ;trackBy: trackId">
+                            <td><a [routerLink]="['/distribution', distribution.id, 'view' ]">{{distribution.startDate |
+                                date : 'd MMMM à HH:mm'}}</a></td>
+                            <td>
+                                {{distribution.placeName}}
+                            </td>
+                            <td>
+                            <span *ngFor="let users of distribution.users; let last = last">
+                                {{users.login}}{{last ? '' : ', '}}
+                            </span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <a routerLink="distribution">
+                    <button type="button" class="btn btn-primary">S'inscrire à une distribution</button>
+                </a>
+
+                <h3>Mes distributions passées</h3>
+                <div class="table-responsive" *ngIf="pastDistributions?.length > 0">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th><span>Date</span></th>
+                            <th><span>Lieu</span></th>
+                            <th><span>Inscrits</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let distribution of pastDistributions ;trackBy: trackId">
+                            <td><a [routerLink]="['/distribution', distribution.id, 'view' ]">{{distribution.startDate |
+                                date : 'd MMMM à HH:mm'}}</a></td>
+                            <td>
+                                {{distribution.placeName}}
+                            </td>
+                            <td>
+                            <span *ngFor="let users of distribution.users; let last = last">
+                                {{users.login}}{{last ? '' : ', '}}
+                            </span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div *ngIf="pastDistributions?.length <= 0">Aucune !</div>
+            </div>
             <div *ngSwitchCase="false">
                 <p>
                     <button type="button" class="btn btn-primary" (click)="login()">Se connecter</button>
@@ -17,8 +75,8 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-3">
-        <span class="hipster img-fluid rounded"></span>
+        <div class="col-md-3">
+            <span class="hipster img-fluid rounded"></span>
+        </div>
     </div>
 </div>

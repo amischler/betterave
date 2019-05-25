@@ -1,13 +1,10 @@
 package org.amap.lafeedeschamps.service;
 
 import org.amap.lafeedeschamps.service.dto.DistributionDTO;
-import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,4 +56,7 @@ public interface DistributionService {
     List<DistributionDTO> findByDates(Instant fromDate, Instant toDate);
 
     Page<DistributionDTO> findByDatesAndPlaceId(Instant fromDate, Instant toDate, Long placeId, Pageable pageable);
+
+    List<DistributionDTO> findByUsers_Id(Long userId);
+
 }

@@ -92,4 +92,10 @@ export class DistributionService {
     unsubscribe(id: number): Observable<HttpResponse<any>> {
         return this.http.delete<any>(`${this.resourceUrl}/${id}/subscribe`, { observe: 'response' });
     }
+
+    loadByUserId(id: number): Observable<EntityArrayResponseType> {
+        return this.http
+            .get<IDistribution[]>(`${this.resourceUrl}/user/${id}`, { observe: 'response' })
+            .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
+    }
 }

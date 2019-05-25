@@ -137,7 +137,7 @@ public class DistributionResource {
      * @param toDate   the end of the time period of Distribution to get
      * @param placeId  the placeIf of Distribution to get
      * @param pageable the pagination information
-     * @return the ResponseEntity with status 200 (OK) and the list of AuditEvents in body
+     * @return the ResponseEntity with status 200 (OK) and the list of distributions in body
      */
     @GetMapping(path = "/distributions", params = {"fromDate", "toDate", "placeId"})
     public ResponseEntity<List<DistributionDTO>> getByDatesAndPlaceId(
@@ -235,6 +235,19 @@ public class DistributionResource {
                 .body(distribution);
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * GET  /distributions/user/:id : get the distributions to which the user "id" subscribed.
+     *
+     * @param id the id of the userDTO
+     * @return the ResponseEntity with status 200 (OK) and with body the list of distributions
+     */
+    @GetMapping("/distributions/user/{id}")
+    public ResponseEntity<List<DistributionDTO>> getDistributionsByUserId(@PathVariable Long id) {
+        log.debug("REST request to get distributions for user : {}", id);
+        List<DistributionDTO> distributionDTO = distributionService.findByUsers_Id(id);
+        return ResponseEntity.ok().body(distributionDTO);
     }
 
 }

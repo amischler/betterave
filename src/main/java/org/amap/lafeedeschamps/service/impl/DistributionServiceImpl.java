@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -117,5 +116,10 @@ public class DistributionServiceImpl implements DistributionService {
             .map(distributionMapper::toDto);
     }
 
+    @Override
+    public List<DistributionDTO> findByUsers_Id(Long userId) {
+        return distributionRepository.findByUsers_IdOrderByStartDateDesc(userId).stream().map(distributionMapper::toDto)
+            .collect(Collectors.toList());
+    }
 
 }
