@@ -18,7 +18,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let distribution of futureDistributions ;trackBy: trackId">
+                        <tr *ngFor="let distribution of futureDistributions">
                             <td><a [routerLink]="['/distribution', distribution.id, 'view' ]">{{distribution.startDate |
                                 date : 'd MMMM à HH:mm'}}</a></td>
                             <td>
@@ -48,7 +48,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let distribution of pastDistributions ;trackBy: trackId">
+                        <tr *ngFor="let distribution of pastDistributions">
                             <td><a [routerLink]="['/distribution', distribution.id, 'view' ]">{{distribution.startDate |
                                 date : 'd MMMM à HH:mm'}}</a></td>
                             <td>
