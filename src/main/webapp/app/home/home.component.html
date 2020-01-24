@@ -26,7 +26,7 @@
                             </td>
                             <td>
                             <span *ngFor="let users of distribution.users; let last = last">
-                                {{users.login}}{{last ? '' : ', '}}
+                                {{users | accountFormat}}{{last ? '' : ', '}}
                             </span>
                             </td>
                         </tr>
@@ -56,7 +56,7 @@
                             </td>
                             <td>
                             <span *ngFor="let users of distribution.users; let last = last">
-                                {{users.login}}{{last ? '' : ', '}}
+                                {{users | accountFormat}}{{last ? '' : ', '}}
                             </span>
                             </td>
                         </tr>

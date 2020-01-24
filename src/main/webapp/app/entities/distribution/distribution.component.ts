@@ -16,6 +16,8 @@ import { CommentService } from 'app/entities/comment/comment.service';
 import { IComment } from 'app/shared/model/comment.model';
 import { LocalStorageService } from 'angular-2-local-storage';
 
+import { AccountFormatPipe } from 'app/shared/pipes/account-format';
+
 @Component({
     selector: 'jhi-distribution',
     templateUrl: './distribution.component.html'

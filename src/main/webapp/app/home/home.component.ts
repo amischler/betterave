@@ -10,6 +10,8 @@ import { filter, map } from 'rxjs/operators';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { IUser } from 'app/core/user/user.model';
 
+import { AccountFormatPipe } from 'app/shared/pipes/account-format';
+
 @Component({
     selector: 'jhi-home',
     templateUrl: './home.component.html',

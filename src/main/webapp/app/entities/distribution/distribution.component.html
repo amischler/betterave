@@ -94,7 +94,7 @@
             <div class="card-body">
                 <p class="card-text">
                     <span *ngFor="let users of distribution.users; let last = last">
-                        {{users.login}}{{last ? '' : ', '}}
+                        {{users | accountFormat}}{{last ? '' : ', '}}
                     </span>
                     <span *ngIf="!distribution.users.length">
                         Aucun inscrit
@@ -107,7 +107,7 @@
                 <p class="card-text">
                     <div *ngFor="let comment of distribution.comments; let last = last"
                          class="badge badge-pill badge-light">
-                        {{comment.user.login}} <span class="font-weight-light text-wrap text-left">{{comment.text}}</span>
+                        {{comment.user | accountFormat}} <span class="font-weight-light text-wrap text-left">{{comment.text}}</span>
                     </div>
                 </p>
             </div>
