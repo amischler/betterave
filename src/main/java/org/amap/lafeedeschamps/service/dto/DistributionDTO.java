@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
 import javax.persistence.Lob;
+import org.amap.lafeedeschamps.domain.enumeration.Type;
 
 /**
  * A DTO for the Distribution entity.
@@ -24,6 +25,8 @@ public class DistributionDTO implements Serializable {
     private Instant startDate;
 
     private Integer minUsers;
+
+    private Type type;
 
 
     private Long placeId;
@@ -80,6 +83,14 @@ public class DistributionDTO implements Serializable {
         this.minUsers = minUsers;
     }
 
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
     public Long getPlaceId() {
         return placeId;
     }
@@ -134,6 +145,7 @@ public class DistributionDTO implements Serializable {
             ", endDate='" + getEndDate() + "'" +
             ", startDate='" + getStartDate() + "'" +
             ", minUsers=" + getMinUsers() +
+            ", type='" + getType() + "'" +
             ", place=" + getPlaceId() +
             ", place='" + getPlaceName() + "'" +
             "}";

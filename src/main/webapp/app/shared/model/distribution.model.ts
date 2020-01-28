@@ -2,6 +2,11 @@ import { Moment } from 'moment';
 import { IComment } from 'app/shared/model/comment.model';
 import { IUser } from 'app/core/user/user.model';
 
+export const enum Type {
+    DISTRIBUTION = 'DISTRIBUTION',
+    WORKSHOP = 'WORKSHOP'
+}
+
 export interface IDistribution {
     id?: number;
     date?: Moment;
@@ -9,6 +14,7 @@ export interface IDistribution {
     endDate?: Moment;
     startDate?: Moment;
     minUsers?: number;
+    type?: Type;
     comments?: IComment[];
     placeName?: string;
     placeId?: number;
@@ -23,6 +29,7 @@ export class Distribution implements IDistribution {
         public endDate?: Moment,
         public startDate?: Moment,
         public minUsers?: number,
+        public type?: Type,
         public comments?: IComment[],
         public placeName?: string,
         public placeId?: number,

@@ -1,6 +1,6 @@
 <div>
     <h2 id="page-heading">
-        <span>Distributions</span>
+        <span>Distributions et ateliers</span>
         <button *jhiHasAnyAuthority="'ROLE_ADMIN'" id="jh-create-entity"
                 class="btn btn-primary float-right jh-create-entity create-distribution"
                 [routerLink]="['/distribution/new']">
@@ -47,7 +47,7 @@
             <div class="card-header">
                 <h5>
                     <a [routerLink]="['/distribution', distribution.id, 'view' ]"><span *jhiHasAnyAuthority="'ROLE_ADMIN'">{{distribution.id}} - </span>
-                        {{distribution.startDate | date : 'd MMMM à HH:mm'}}
+                        <fa-icon [icon]="getIconByType(distribution.type)"></fa-icon> {{distribution.startDate | date : 'd MMMM à HH:mm'}}
                     </a>
                     <div class="btn-group float-sm-right">
                         <button type="submit"
@@ -89,7 +89,7 @@
                         </button>
                     </div>
                 </h5>
-                <h6 class="card-subtitle mb-2 text-muted">{{distribution.placeName}}</h6>
+                <h6 class="card-subtitle mb-2 text-muted"><fa-icon [icon]="'map-marker-alt'"></fa-icon> {{distribution.placeName}}</h6>
             </div>
             <div class="card-body">
                 <p class="card-text">

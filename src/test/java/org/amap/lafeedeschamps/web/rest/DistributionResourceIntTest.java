@@ -45,6 +45,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import org.amap.lafeedeschamps.domain.enumeration.Type;
 /**
  * Test class for the DistributionResource REST controller.
  *
@@ -68,6 +69,9 @@ public class DistributionResourceIntTest {
 
     private static final Integer DEFAULT_MIN_USERS = 1;
     private static final Integer UPDATED_MIN_USERS = 2;
+
+    private static final Type DEFAULT_TYPE = Type.DISTRIBUTION;
+    private static final Type UPDATED_TYPE = Type.WORKSHOP;
 
     @Autowired
     private DistributionRepository distributionRepository;
@@ -133,7 +137,8 @@ public class DistributionResourceIntTest {
             .text(DEFAULT_TEXT)
             .endDate(DEFAULT_END_DATE)
             .startDate(DEFAULT_START_DATE)
-            .minUsers(DEFAULT_MIN_USERS);
+            .minUsers(DEFAULT_MIN_USERS)
+            .type(DEFAULT_TYPE);
         return distribution;
     }
 
@@ -163,6 +168,7 @@ public class DistributionResourceIntTest {
         assertThat(testDistribution.getEndDate()).isEqualTo(DEFAULT_END_DATE);
         assertThat(testDistribution.getStartDate()).isEqualTo(DEFAULT_START_DATE);
         assertThat(testDistribution.getMinUsers()).isEqualTo(DEFAULT_MIN_USERS);
+        assertThat(testDistribution.getType()).isEqualTo(DEFAULT_TYPE);
     }
 
     @Test
@@ -200,9 +206,10 @@ public class DistributionResourceIntTest {
             .andExpect(jsonPath("$.[*].text").value(hasItem(DEFAULT_TEXT.toString())))
             .andExpect(jsonPath("$.[*].endDate").value(hasItem(DEFAULT_END_DATE.toString())))
             .andExpect(jsonPath("$.[*].startDate").value(hasItem(DEFAULT_START_DATE.toString())))
-            .andExpect(jsonPath("$.[*].minUsers").value(hasItem(DEFAULT_MIN_USERS)));
+            .andExpect(jsonPath("$.[*].minUsers").value(hasItem(DEFAULT_MIN_USERS)))
+            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())));
     }
-    
+
     @SuppressWarnings({"unchecked"})
     public void getAllDistributionsWithEagerRelationshipsIsEnabled() throws Exception {
         DistributionResource distributionResource = new DistributionResource(distributionServiceMock, userServiceMock);
@@ -251,7 +258,8 @@ public class DistributionResourceIntTest {
             .andExpect(jsonPath("$.text").value(DEFAULT_TEXT.toString()))
             .andExpect(jsonPath("$.endDate").value(DEFAULT_END_DATE.toString()))
             .andExpect(jsonPath("$.startDate").value(DEFAULT_START_DATE.toString()))
-            .andExpect(jsonPath("$.minUsers").value(DEFAULT_MIN_USERS));
+            .andExpect(jsonPath("$.minUsers").value(DEFAULT_MIN_USERS))
+            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()));
     }
 
     @Test
@@ -279,7 +287,8 @@ public class DistributionResourceIntTest {
             .text(UPDATED_TEXT)
             .endDate(UPDATED_END_DATE)
             .startDate(UPDATED_START_DATE)
-            .minUsers(UPDATED_MIN_USERS);
+            .minUsers(UPDATED_MIN_USERS)
+            .type(UPDATED_TYPE);
         DistributionDTO distributionDTO = distributionMapper.toDto(updatedDistribution);
 
         restDistributionMockMvc.perform(put("/api/distributions")
@@ -296,6 +305,7 @@ public class DistributionResourceIntTest {
         assertThat(testDistribution.getEndDate()).isEqualTo(UPDATED_END_DATE);
         assertThat(testDistribution.getStartDate()).isEqualTo(UPDATED_START_DATE);
         assertThat(testDistribution.getMinUsers()).isEqualTo(UPDATED_MIN_USERS);
+        assertThat(testDistribution.getType()).isEqualTo(UPDATED_TYPE);
     }
 
     @Test

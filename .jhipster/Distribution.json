@@ -48,6 +48,11 @@
         {
             "fieldName": "minUsers",
             "fieldType": "Integer"
+        },
+        {
+            "fieldName": "type",
+            "fieldType": "Type",
+            "fieldValues": "DISTRIBUTION,WORKSHOP"
         }
     ],
     "changelogDate": "20190203093219",

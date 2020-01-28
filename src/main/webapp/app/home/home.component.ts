@@ -4,7 +4,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { LoginModalService, AccountService, Account } from 'app/core';
 
-import { IDistribution } from 'app/shared/model/distribution.model';
+import { IDistribution, Type } from 'app/shared/model/distribution.model';
 import { DistributionService } from 'app/entities/distribution/distribution.service';
 import { filter, map } from 'rxjs/operators';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
@@ -81,5 +81,13 @@ export class HomeComponent implements OnInit {
 
     protected onError(errorMessage: string) {
         this.jhiAlertService.error(errorMessage, null, null);
+    }
+
+    getIconByType(type) {
+        if (type === Type.DISTRIBUTION) {
+            return 'shopping-basket';
+        } else if (type === Type.WORKSHOP) {
+            return 'tractor';
+        }
     }
 }

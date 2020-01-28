@@ -5,8 +5,10 @@
             <h1 *ngSwitchCase="true">Bienvenue, {{account.login}}</h1>
             <p class="lead">Plateforme de gestion de l'AMAP la Fée des Champs</p>
             <div *ngSwitchCase="true">
-                <h2>Distributions</h2>
-                <h3>Mes distributions à venir</h3>
+                <a routerLink="distribution">
+                    <button type="button" class="btn btn-primary">S'inscrire à une distribution ou un atelier</button>
+                </a>
+                <h3>Mes distributions/ateliers à venir</h3>
                 <div *ngIf="futureDistributions?.length <= 0">Aucune !</div>
                 <div class="table-responsive" *ngIf="futureDistributions?.length > 0">
                     <table class="table table-striped">
@@ -19,7 +21,7 @@
                         </thead>
                         <tbody>
                         <tr *ngFor="let distribution of futureDistributions">
-                            <td><a [routerLink]="['/distribution', distribution.id, 'view' ]">{{distribution.startDate |
+                            <td><a [routerLink]="['/distribution', distribution.id, 'view' ]"><fa-icon [icon]="getIconByType(distribution.type)"></fa-icon> {{distribution.startDate |
                                 date : 'd MMMM à HH:mm'}}</a></td>
                             <td>
                                 {{distribution.placeName}}
@@ -33,11 +35,8 @@
                         </tbody>
                     </table>
                 </div>
-                <a routerLink="distribution">
-                    <button type="button" class="btn btn-primary">S'inscrire à une distribution</button>
-                </a>
 
-                <h3>Mes distributions passées</h3>
+                <h3>Mes distributions/ateliers passés</h3>
                 <div class="table-responsive" *ngIf="pastDistributions?.length > 0">
                     <table class="table table-striped">
                         <thead>
@@ -49,7 +48,7 @@
                         </thead>
                         <tbody>
                         <tr *ngFor="let distribution of pastDistributions">
-                            <td><a [routerLink]="['/distribution', distribution.id, 'view' ]">{{distribution.startDate |
+                            <td><a [routerLink]="['/distribution', distribution.id, 'view' ]"><fa-icon [icon]="getIconByType(distribution.type)"></fa-icon> {{distribution.startDate |
                                 date : 'd MMMM à HH:mm'}}</a></td>
                             <td>
                                 {{distribution.placeName}}

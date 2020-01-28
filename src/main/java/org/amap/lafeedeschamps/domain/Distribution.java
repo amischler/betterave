@@ -15,6 +15,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
 
+import org.amap.lafeedeschamps.domain.enumeration.Type;
+
 /**
  * A Distribution.
  */
@@ -45,6 +47,10 @@ public class Distribution implements Serializable {
 
     @Column(name = "min_users")
     private Integer minUsers;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "jhi_type")
+    private Type type;
 
     @OneToMany(mappedBy = "distribution")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -132,6 +138,19 @@ public class Distribution implements Serializable {
 
     public void setMinUsers(Integer minUsers) {
         this.minUsers = minUsers;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public Distribution type(Type type) {
+        this.type = type;
+        return this;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
     }
 
     public Set<Comment> getComments() {
@@ -225,6 +244,7 @@ public class Distribution implements Serializable {
             ", endDate='" + getEndDate() + "'" +
             ", startDate='" + getStartDate() + "'" +
             ", minUsers=" + getMinUsers() +
+            ", type='" + getType() + "'" +
             "}";
     }
 }

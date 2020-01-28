@@ -7,7 +7,7 @@ import { take, map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { DATE_FORMAT, DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { DistributionService } from 'app/entities/distribution/distribution.service';
-import { IDistribution, Distribution } from 'app/shared/model/distribution.model';
+import { IDistribution, Distribution, Type } from 'app/shared/model/distribution.model';
 
 describe('Service Tests', () => {
     describe('Distribution Service', () => {
@@ -25,7 +25,7 @@ describe('Service Tests', () => {
             httpMock = injector.get(HttpTestingController);
             currentDate = moment();
 
-            elemDefault = new Distribution(0, currentDate, 'AAAAAAA', currentDate, currentDate, 0);
+            elemDefault = new Distribution(0, currentDate, 'AAAAAAA', currentDate, currentDate, 0, Type.DISTRIBUTION);
         });
 
         describe('Service methods', async () => {
@@ -80,7 +80,8 @@ describe('Service Tests', () => {
                         text: 'BBBBBB',
                         endDate: currentDate.format(DATE_TIME_FORMAT),
                         startDate: currentDate.format(DATE_TIME_FORMAT),
-                        minUsers: 1
+                        minUsers: 1,
+                        type: 'BBBBBB'
                     },
                     elemDefault
                 );
@@ -108,7 +109,8 @@ describe('Service Tests', () => {
                         text: 'BBBBBB',
                         endDate: currentDate.format(DATE_TIME_FORMAT),
                         startDate: currentDate.format(DATE_TIME_FORMAT),
-                        minUsers: 1
+                        minUsers: 1,
+                        type: 'BBBBBB'
                     },
                     elemDefault
                 );

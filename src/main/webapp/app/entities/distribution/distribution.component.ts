@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 
-import { IDistribution } from 'app/shared/model/distribution.model';
+import { IDistribution, Type } from 'app/shared/model/distribution.model';
 import { AccountService } from 'app/core';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
@@ -236,6 +236,14 @@ export class DistributionComponent implements OnInit, OnDestroy {
             return 'badge-pill badge-primary';
         } else {
             return 'badge-pill badge-success';
+        }
+    }
+
+    getIconByType(type) {
+        if (type === Type.DISTRIBUTION) {
+            return 'shopping-basket';
+        } else if (type === Type.WORKSHOP) {
+            return 'tractor';
         }
     }
 }
