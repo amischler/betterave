@@ -60,7 +60,6 @@ export class DistributionComponent implements OnInit, OnDestroy {
     }
 
     loadAll() {
-        this.localStorageService.set('defaultPlaceId', this.placeId);
         this.distributionService
             .query({
                 page: this.page,
@@ -90,7 +89,6 @@ export class DistributionComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.today();
         this.nextYear();
-        this.placeId = this.localStorageService.get('defaultPlaceId');
         this.loadAll();
         this.accountService.identity().then(account => {
             this.currentAccount = account;
