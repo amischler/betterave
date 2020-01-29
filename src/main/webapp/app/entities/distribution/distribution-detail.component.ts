@@ -9,6 +9,8 @@ import { IComment } from 'app/shared/model/comment.model';
 import { CommentService } from 'app/entities/comment/comment.service';
 import { AccountService } from 'app/core';
 
+import { AccountFormatPipe } from 'app/shared/pipes/account-format';
+
 @Component({
     selector: 'jhi-distribution-detail',
     templateUrl: './distribution-detail.component.html'

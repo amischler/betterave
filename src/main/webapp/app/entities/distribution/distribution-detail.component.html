@@ -19,11 +19,11 @@
                 <dt><span>Amapiens</span> <span class="badge-pill badge-primary">{{distribution.users.length}}</span></dt>
                 <dd>
                     <span *ngFor="let users of distribution.users; let last = last">
-                        {{users.login}}{{last ? '' : ', '}}
+                        {{users | accountFormat}}{{last ? '' : ', '}}
                     </span>
                 </dd>
                 <dd *ngFor="let comment of comments;">
-                    <span class="badge badge-pill badge-light">{{comment.user.login}} <span class="font-weight-light text-wrap text-left">{{comment.text}}</span>
+                    <span class="badge badge-pill badge-light">{{comment.user | accountFormat}} <span class="font-weight-light text-wrap text-left">{{comment.text}}</span>
                         <div class="btn-group">
                         <button type="button"
                             *ngIf="canEditComment(comment)"
