@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="#{email.reminder.title(${distribution.type})}">Distribution</title>
+    <title th:text="#{email.reminder.title(${distribution.type.displayText})}">Distribution</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="shortcut icon" th:href="@{|${baseUrl}/favicon.ico|}"/>
 </head>
@@ -12,7 +12,7 @@
 <p th:text="#{email.reminder.text1}">
     Petit rappel automatique, tu t'es inscrit(e) demain :
 </p>
-<p th:text="#{email.reminder.text2(${timeFormat.format(distribution.startDate)}, ${distribution.type}, ${distribution.placeName})}">
+<p th:text="#{email.reminder.text2(${timeFormat.format(distribution.startDate)}, ${distribution.type.displayText}, ${distribution.placeName})}">
     Atelier à 9h
 </p>
 <p>

@@ -6,13 +6,15 @@ package org.amap.lafeedeschamps.domain.enumeration;
 public enum Type {
     DISTRIBUTION {
         @Override
-        public String toString() {
+        public String getDisplayText() {
             return "Distribution";
         }
     }, WORKSHOP {
         @Override
-        public String toString() {
+        public String getDisplayText() {
             return "Atelier";
         }
-    }
+    };
+
+    public abstract String getDisplayText();
 }
