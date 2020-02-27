@@ -15,6 +15,8 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 /**
@@ -32,6 +34,8 @@ public class MailService {
     private static final String DISTRIBUTION = "distribution";
 
     private static final String BASE_URL = "baseUrl";
+
+    private static final String TIME_FORMAT = "timeFormat";
 
     private final JHipsterProperties jHipsterProperties;
 
@@ -118,6 +122,7 @@ public class MailService {
         log.debug("Sending reminder email to {}", user.getEmail());
         Context context = createDefaultContext(user);
         context.setVariable(DISTRIBUTION, distributionDTO);
+        context.setVariable(TIME_FORMAT, DateTimeFormatter.ofPattern("HH'h'mm").withZone(ZoneId.of("Europe/Paris")).withLocale(Locale.FRENCH));
         sendEmailFromTemplate(user, "mail/distributionReminderEmail", "email.reminder.title", context);
     }
 

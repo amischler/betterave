@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="#{email.reminder.title}">Distribution</title>
+    <title th:text="#{email.reminder.title(${distribution.type})}">Distribution</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="shortcut icon" th:href="@{|${baseUrl}/favicon.ico|}"/>
 </head>
@@ -9,15 +9,18 @@
 <p th:text="#{email.reminder.greeting(${user.login})}">
     Bonjour login,
 </p>
-<p th:text="#{email.reminder.text1(${distribution.startDate})}">
-    Petit rappel automatique : tu t'es inscrit(e) pour la distribution de demain ;-)
+<p th:text="#{email.reminder.text1}">
+    Petit rappel automatique, tu t'es inscrit(e) demain :
+</p>
+<p th:text="#{email.reminder.text2(${timeFormat.format(distribution.startDate)}, ${distribution.type}, ${distribution.placeName})}">
+    Atelier à 9h
 </p>
 <p>
     <a th:with="url=(@{|${baseUrl}/#/distribution/${distribution.id}/view|})" th:href="${url}"
        th:text="Détails">Détails</a>
 </p>
 <p>
-    <span th:text="#{email.reminder.text2}">A bientôt</span>
+    <span th:text="#{email.reminder.text3}">A bientôt</span>
     <br/>
     <em th:text="#{email.signature}">L'équipe de l'AMAP.</em>
 </p>

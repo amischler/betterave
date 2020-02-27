@@ -1,9 +1,11 @@
 package org.amap.lafeedeschamps.service;
-import org.amap.lafeedeschamps.config.Constants;
 
-import org.amap.lafeedeschamps.BetteraveApp;
-import org.amap.lafeedeschamps.domain.User;
 import io.github.jhipster.config.JHipsterProperties;
+import org.amap.lafeedeschamps.BetteraveApp;
+import org.amap.lafeedeschamps.config.Constants;
+import org.amap.lafeedeschamps.domain.User;
+import org.amap.lafeedeschamps.domain.enumeration.Type;
+import org.amap.lafeedeschamps.service.dto.DistributionDTO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +26,8 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import java.io.ByteArrayOutputStream;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -182,6 +186,48 @@ public class MailServiceIntTest {
     public void testSendEmailWithException() throws Exception {
         doThrow(MailSendException.class).when(javaMailSender).send(any(MimeMessage.class));
         mailService.sendEmail("john.doe@example.com", "testSubject", "testContent", false, false);
+    }
+
+    @Test
+    public void testSendReminderMailForWorkshop() throws Exception {
+        User user = new User();
+        user.setLangKey(Constants.DEFAULT_LANGUAGE);
+        user.setLogin("john");
+        user.setEmail("john.doe@example.com");
+        DistributionDTO distributionDTO = new DistributionDTO();
+        distributionDTO.setType(Type.WORKSHOP);
+        distributionDTO.setPlaceName("Wambrechies");
+        distributionDTO.setStartDate(LocalDateTime.of(2020, 02, 27, 7, 35).atZone(ZoneId.of("Europe/Paris")).toInstant());
+        mailService.sendReminderEmail(user, distributionDTO);
+        verify(javaMailSender).send(messageCaptor.capture());
+        MimeMessage message = messageCaptor.getValue();
+        assertThat(message.getAllRecipients()[0].toString()).isEqualTo(user.getEmail());
+        assertThat(message.getFrom()[0].toString()).isEqualTo("test@localhost");
+        assertThat(message.getContent().toString()).isNotEmpty();
+        assertThat(message.getContent()).asString().contains("Atelier à 07h35 - Wambrechies");
+        assertThat(message.getContent()).asString().contains("Rappel : Atelier AMAP");
+        assertThat(message.getDataHandler().getContentType()).isEqualTo("text/html;charset=UTF-8");
+    }
+
+    @Test
+    public void testSendReminderMailForDistribution() throws Exception {
+        User user = new User();
+        user.setLangKey(Constants.DEFAULT_LANGUAGE);
+        user.setLogin("john");
+        user.setEmail("john.doe@example.com");
+        DistributionDTO distributionDTO = new DistributionDTO();
+        distributionDTO.setType(Type.DISTRIBUTION);
+        distributionDTO.setPlaceName("Lille");
+        distributionDTO.setStartDate(LocalDateTime.of(2020, 02, 27, 7, 35).atZone(ZoneId.of("Europe/Paris")).toInstant());
+        mailService.sendReminderEmail(user, distributionDTO);
+        verify(javaMailSender).send(messageCaptor.capture());
+        MimeMessage message = messageCaptor.getValue();
+        assertThat(message.getAllRecipients()[0].toString()).isEqualTo(user.getEmail());
+        assertThat(message.getFrom()[0].toString()).isEqualTo("test@localhost");
+        assertThat(message.getContent().toString()).isNotEmpty();
+        assertThat(message.getContent()).asString().contains("Distribution à 07h35 - Lille");
+        assertThat(message.getContent()).asString().contains("Rappel : Distribution AMAP");
+        assertThat(message.getDataHandler().getContentType()).isEqualTo("text/html;charset=UTF-8");
     }
 
 }
