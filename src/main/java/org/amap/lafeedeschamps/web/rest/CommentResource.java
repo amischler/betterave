@@ -2,9 +2,12 @@ package org.amap.lafeedeschamps.web.rest;
 
 import io.github.jhipster.web.util.ResponseUtil;
 import org.amap.lafeedeschamps.domain.User;
+import org.amap.lafeedeschamps.repository.DistributionRepository;
 import org.amap.lafeedeschamps.service.CommentService;
+import org.amap.lafeedeschamps.service.MailService;
 import org.amap.lafeedeschamps.service.UserService;
 import org.amap.lafeedeschamps.service.dto.CommentDTO;
+import org.amap.lafeedeschamps.service.mapper.CommentMapper;
 import org.amap.lafeedeschamps.web.rest.errors.BadRequestAlertException;
 import org.amap.lafeedeschamps.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
@@ -32,9 +35,18 @@ public class CommentResource {
 
     private final UserService userService;
 
-    public CommentResource(CommentService commentService, UserService userService) {
+    private final DistributionRepository distributionRepository;
+
+    private final MailService mailService;
+
+    private final CommentMapper commentMapper;
+
+    public CommentResource(CommentService commentService, UserService userService, DistributionRepository distributionRepository, MailService mailService, CommentMapper commentMapper) {
         this.commentService = commentService;
         this.userService = userService;
+        this.distributionRepository = distributionRepository;
+        this.mailService = mailService;
+        this.commentMapper = commentMapper;
     }
 
     /**
@@ -53,6 +65,8 @@ public class CommentResource {
         Optional<User> user = userService.getUserWithAuthorities();
         user.ifPresent(u -> commentDTO.setUserId(u.getId()));
         CommentDTO result = commentService.save(commentDTO);
+        distributionRepository.findById(commentDTO.getDistributionId()).ifPresent(distribution ->
+            mailService.sendCommentEmail(commentMapper.toEntity(commentDTO), distribution));
         return ResponseEntity.created(new URI("/api/comments/" + result.getId()))
             .body(result);
     }
@@ -104,7 +118,7 @@ public class CommentResource {
     /**
      * GET  /comments?distributionId=1 : get the comments for the given distributionId
      *
-     * @param id the id of the commentDTO to retrieve
+     * @param distributionId the id of the commentDTO to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the commentDTO, or with status 404 (Not Found)
      */
     @GetMapping(value = "/comments", params = {"distributionId"})

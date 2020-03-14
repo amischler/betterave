@@ -3,9 +3,11 @@ package org.amap.lafeedeschamps.service;
 import io.github.jhipster.config.JHipsterProperties;
 import org.amap.lafeedeschamps.BetteraveApp;
 import org.amap.lafeedeschamps.config.Constants;
+import org.amap.lafeedeschamps.domain.Comment;
+import org.amap.lafeedeschamps.domain.Distribution;
+import org.amap.lafeedeschamps.domain.DistributionPlace;
 import org.amap.lafeedeschamps.domain.User;
 import org.amap.lafeedeschamps.domain.enumeration.Type;
-import org.amap.lafeedeschamps.service.dto.DistributionDTO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -194,11 +196,13 @@ public class MailServiceIntTest {
         user.setLangKey(Constants.DEFAULT_LANGUAGE);
         user.setLogin("john");
         user.setEmail("john.doe@example.com");
-        DistributionDTO distributionDTO = new DistributionDTO();
-        distributionDTO.setType(Type.WORKSHOP);
-        distributionDTO.setPlaceName("Wambrechies");
-        distributionDTO.setStartDate(LocalDateTime.of(2020, 02, 27, 7, 35).atZone(ZoneId.of("Europe/Paris")).toInstant());
-        mailService.sendReminderEmail(user, distributionDTO);
+        Distribution distribution = new Distribution();
+        distribution.setType(Type.WORKSHOP);
+        DistributionPlace distributionPlace = new DistributionPlace();
+        distributionPlace.setName("Wambrechies");
+        distribution.setPlace(distributionPlace);
+        distribution.setStartDate(LocalDateTime.of(2020, 02, 27, 7, 35).atZone(ZoneId.of("Europe/Paris")).toInstant());
+        mailService.sendReminderEmail(user, distribution);
         verify(javaMailSender).send(messageCaptor.capture());
         MimeMessage message = messageCaptor.getValue();
         assertThat(message.getAllRecipients()[0].toString()).isEqualTo(user.getEmail());
@@ -215,11 +219,13 @@ public class MailServiceIntTest {
         user.setLangKey(Constants.DEFAULT_LANGUAGE);
         user.setLogin("john");
         user.setEmail("john.doe@example.com");
-        DistributionDTO distributionDTO = new DistributionDTO();
-        distributionDTO.setType(Type.DISTRIBUTION);
-        distributionDTO.setPlaceName("Lille");
-        distributionDTO.setStartDate(LocalDateTime.of(2020, 02, 27, 7, 35).atZone(ZoneId.of("Europe/Paris")).toInstant());
-        mailService.sendReminderEmail(user, distributionDTO);
+        Distribution distribution = new Distribution();
+        distribution.setType(Type.DISTRIBUTION);
+        DistributionPlace distributionPlace = new DistributionPlace();
+        distributionPlace.setName("Lille");
+        distribution.setPlace(distributionPlace);
+        distribution.setStartDate(LocalDateTime.of(2020, 02, 27, 7, 35).atZone(ZoneId.of("Europe/Paris")).toInstant());
+        mailService.sendReminderEmail(user, distribution);
         verify(javaMailSender).send(messageCaptor.capture());
         MimeMessage message = messageCaptor.getValue();
         assertThat(message.getAllRecipients()[0].toString()).isEqualTo(user.getEmail());
@@ -227,6 +233,38 @@ public class MailServiceIntTest {
         assertThat(message.getContent().toString()).isNotEmpty();
         assertThat(message.getContent()).asString().contains("Distribution à 07h35 - Lille");
         assertThat(message.getContent()).asString().contains("Rappel : Distribution AMAP");
+        assertThat(message.getDataHandler().getContentType()).isEqualTo("text/html;charset=UTF-8");
+    }
+
+    @Test
+    public void testSendCommentEmail() throws Exception {
+        User user = new User();
+        user.setLangKey(Constants.DEFAULT_LANGUAGE);
+        user.setLogin("john");
+        user.setEmail("john.doe@example.com");
+        user.setId(1l);
+        Distribution distribution = new Distribution();
+        distribution.setType(Type.DISTRIBUTION);
+        DistributionPlace distributionPlace = new DistributionPlace();
+        distributionPlace.setName("Lille");
+        distribution.setPlace(distributionPlace);
+        Comment comment = new Comment();
+        comment.setText("Covoiturage possible à 14h");
+        User commentUser = new User();
+        commentUser.setFirstName("Antoine");
+        commentUser.setLastName("M");
+        commentUser.setId(2l);
+        comment.setUser(commentUser);
+        distribution.getUsers().add(user);
+        distribution.getUsers().add(commentUser);
+        mailService.sendCommentEmail(comment, distribution);
+        verify(javaMailSender).send(messageCaptor.capture());
+        MimeMessage message = messageCaptor.getValue();
+        assertThat(message.getAllRecipients().length).isEqualTo(1);
+        assertThat(message.getAllRecipients()[0].toString()).isEqualTo(user.getEmail());
+        assertThat(message.getFrom()[0].toString()).isEqualTo("test@localhost");
+        assertThat(message.getContent().toString()).isNotEmpty();
+        assertThat(message.getContent().toString()).contains("Antoine dit : &quot;Covoiturage possible à 14h&quot;");
         assertThat(message.getDataHandler().getContentType()).isEqualTo("text/html;charset=UTF-8");
     }
 

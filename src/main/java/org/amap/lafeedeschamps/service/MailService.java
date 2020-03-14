@@ -1,8 +1,10 @@
 package org.amap.lafeedeschamps.service;
 
 import io.github.jhipster.config.JHipsterProperties;
+import org.amap.lafeedeschamps.domain.Comment;
+import org.amap.lafeedeschamps.domain.Distribution;
 import org.amap.lafeedeschamps.domain.User;
-import org.amap.lafeedeschamps.service.dto.DistributionDTO;
+import org.amap.lafeedeschamps.service.util.UserUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -31,7 +33,11 @@ public class MailService {
 
     private static final String USER = "user";
 
+    private static final String USER_NAME = "userName";
+
     private static final String DISTRIBUTION = "distribution";
+
+    private static final String COMMENT = "comment";
 
     private static final String BASE_URL = "baseUrl";
 
@@ -95,6 +101,7 @@ public class MailService {
         Locale locale = Locale.forLanguageTag(user.getLangKey());
         Context context = new Context(locale);
         context.setVariable(USER, user);
+        context.setVariable(USER_NAME, UserUtil.formatFirstName(user));
         context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl());
         return context;
     }
@@ -118,12 +125,32 @@ public class MailService {
     }
 
     @Async
-    public void sendReminderEmail(User user, DistributionDTO distributionDTO) {
+    public void sendReminderEmail(User user, Distribution distribution) {
         log.debug("Sending reminder email to {}", user.getEmail());
         Context context = createDefaultContext(user);
-        context.setVariable(DISTRIBUTION, distributionDTO);
+        context.setVariable(DISTRIBUTION, distribution);
         context.setVariable(TIME_FORMAT, DateTimeFormatter.ofPattern("HH'h'mm").withZone(ZoneId.of("Europe/Paris")).withLocale(Locale.FRENCH));
         sendEmailFromTemplate(user, "mail/distributionReminderEmail", "email.reminder.title", context);
+    }
+
+    /**
+     * Publish a new comment by email to users.
+     *
+     * @param comment
+     * @param distribution
+     */
+    @Async
+    public void sendCommentEmail(Comment comment, Distribution distribution) {
+        for (User user : distribution.getUsers()) {
+            if (comment.getUser().getId() != user.getId()) {
+                log.debug("Sending comment email to {}", user);
+                Context context = createDefaultContext(user);
+                context.setVariable(COMMENT, comment);
+                context.setVariable(DISTRIBUTION, distribution);
+                context.setVariable("commentUserName", UserUtil.formatFirstName(comment.getUser()));
+                sendEmailFromTemplate(user, "mail/commentEmail", "email.comment.title", context);
+            }
+        }
     }
 
 }

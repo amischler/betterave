@@ -3,6 +3,7 @@ package org.amap.lafeedeschamps.scheduled;
 import org.amap.lafeedeschamps.service.DistributionService;
 import org.amap.lafeedeschamps.service.MailService;
 import org.amap.lafeedeschamps.service.dto.DistributionDTO;
+import org.amap.lafeedeschamps.service.mapper.DistributionMapper;
 import org.amap.lafeedeschamps.service.mapper.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +28,13 @@ public class MailTask {
 
     private final UserMapper userMapper;
 
-    public MailTask(DistributionService distributionService, MailService mailService, UserMapper userMapper) {
+    private final DistributionMapper distributionMapper;
+
+    public MailTask(DistributionService distributionService, MailService mailService, UserMapper userMapper, DistributionMapper distributionMapper) {
         this.distributionService = distributionService;
         this.mailService = mailService;
         this.userMapper = userMapper;
+        this.distributionMapper = distributionMapper;
     }
 
     @Scheduled(cron = "0 0 12 * * *")
@@ -42,7 +46,7 @@ public class MailTask {
             now.plusDays(2).atStartOfDay(ZoneId.systemDefault()).toInstant());
         log.info("There is {} distributions tomorrow", distributions.size());
         distributions.forEach(distributionDTO -> distributionDTO.getUsers().forEach(userDTO -> {
-            mailService.sendReminderEmail(userMapper.userDTOToUser(userDTO), distributionDTO);
+            mailService.sendReminderEmail(userMapper.userDTOToUser(userDTO), distributionMapper.toEntity(distributionDTO));
         }));
     }
 

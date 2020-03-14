@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{email.comment.title}">[AMAP La Fée des champs] Nouveau commentaire</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="shortcut icon" th:href="@{|${baseUrl}/favicon.ico|}"/>
+</head>
+<body>
+<p th:text="#{email.greeting(${userName})}">
+    Bonjour login,
+</p>
+<p th:text="#{email.comment.text1}">
+    Un nouveau commentaire a été ajouté sur un évènement auquel tu participes :
+</p>
+<p th:text="#{email.comment.text2(${commentUserName}, ${comment.text})}">
+    Antoine dit : "Covoiturage possible ?"
+</p>
+<p>
+    <a th:with="url=(@{|${baseUrl}/#/distribution/${distribution.id}/view|})" th:href="${url}"
+       th:text="Détails">Répondre</a>
+</p>
+<p>
+    <span th:text="#{email.comment.text3}">Attention, ceci est un message automatique. Pour répondre, utilise le lien ci-dessous et ajoutez un commentaire sur l'évènement.
+</span>
+</p>
+</body>
+</html>

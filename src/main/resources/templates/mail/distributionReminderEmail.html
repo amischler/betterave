@@ -6,13 +6,13 @@
     <link rel="shortcut icon" th:href="@{|${baseUrl}/favicon.ico|}"/>
 </head>
 <body>
-<p th:text="#{email.reminder.greeting(${user.login})}">
+<p th:text="#{email.greeting(${userName})}">
     Bonjour login,
 </p>
 <p th:text="#{email.reminder.text1}">
     Petit rappel automatique, tu t'es inscrit(e) demain :
 </p>
-<p th:text="#{email.reminder.text2(${timeFormat.format(distribution.startDate)}, ${distribution.type.displayText}, ${distribution.placeName})}">
+<p th:text="#{email.reminder.text2(${timeFormat.format(distribution.startDate)}, ${distribution.type.displayText}, ${distribution.place.name})}">
     Atelier à 9h
 </p>
 <p>

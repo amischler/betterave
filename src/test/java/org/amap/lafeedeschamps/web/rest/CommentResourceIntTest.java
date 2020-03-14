@@ -5,7 +5,9 @@ import org.amap.lafeedeschamps.BetteraveApp;
 import org.amap.lafeedeschamps.domain.Comment;
 import org.amap.lafeedeschamps.domain.User;
 import org.amap.lafeedeschamps.repository.CommentRepository;
+import org.amap.lafeedeschamps.repository.DistributionRepository;
 import org.amap.lafeedeschamps.service.CommentService;
+import org.amap.lafeedeschamps.service.MailService;
 import org.amap.lafeedeschamps.service.UserService;
 import org.amap.lafeedeschamps.service.dto.CommentDTO;
 import org.amap.lafeedeschamps.service.mapper.CommentMapper;
@@ -75,6 +77,12 @@ public class CommentResourceIntTest {
     @Autowired
     private Validator validator;
 
+    @Autowired
+    private DistributionRepository distributionRepository;
+
+    @Autowired
+    private MailService mailService;
+
     private MockMvc restCommentMockMvc;
 
     private Comment comment;
@@ -82,7 +90,7 @@ public class CommentResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CommentResource commentResource = new CommentResource(commentService, userService);
+        final CommentResource commentResource = new CommentResource(commentService, userService, distributionRepository, mailService, commentMapper);
         this.restCommentMockMvc = MockMvcBuilders.standaloneSetup(commentResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -163,7 +171,7 @@ public class CommentResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(comment.getId().intValue())))
             .andExpect(jsonPath("$.[*].text").value(hasItem(DEFAULT_TEXT.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getComment() throws Exception {
