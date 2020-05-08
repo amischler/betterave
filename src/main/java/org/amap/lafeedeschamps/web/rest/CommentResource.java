@@ -65,8 +65,10 @@ public class CommentResource {
         Optional<User> user = userService.getUserWithAuthorities();
         user.ifPresent(u -> commentDTO.setUserId(u.getId()));
         CommentDTO result = commentService.save(commentDTO);
-        distributionRepository.findById(commentDTO.getDistributionId()).ifPresent(distribution ->
-            mailService.sendCommentEmail(commentMapper.toEntity(commentDTO), distribution));
+        if (commentDTO.getDistributionId() != null) {
+            distributionRepository.findOneWithEagerRelationships(commentDTO.getDistributionId()).ifPresent(distribution ->
+                mailService.sendCommentEmail(user.get(), commentMapper.toEntity(commentDTO), distribution));
+        }
         return ResponseEntity.created(new URI("/api/comments/" + result.getId()))
             .body(result);
     }

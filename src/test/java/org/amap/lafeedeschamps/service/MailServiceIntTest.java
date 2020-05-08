@@ -209,7 +209,7 @@ public class MailServiceIntTest {
         assertThat(message.getFrom()[0].toString()).isEqualTo("test@localhost");
         assertThat(message.getContent().toString()).isNotEmpty();
         assertThat(message.getContent()).asString().contains("Atelier à 07h35 - Wambrechies");
-        assertThat(message.getContent()).asString().contains("Rappel : Atelier AMAP");
+        assertThat(message.getContent()).asString().contains("[AMAP La Fée des champs] Rappel : Atelier");
         assertThat(message.getDataHandler().getContentType()).isEqualTo("text/html;charset=UTF-8");
     }
 
@@ -232,7 +232,7 @@ public class MailServiceIntTest {
         assertThat(message.getFrom()[0].toString()).isEqualTo("test@localhost");
         assertThat(message.getContent().toString()).isNotEmpty();
         assertThat(message.getContent()).asString().contains("Distribution à 07h35 - Lille");
-        assertThat(message.getContent()).asString().contains("Rappel : Distribution AMAP");
+        assertThat(message.getContent()).asString().contains("[AMAP La Fée des champs] Rappel : Distribution");
         assertThat(message.getDataHandler().getContentType()).isEqualTo("text/html;charset=UTF-8");
     }
 
@@ -254,10 +254,11 @@ public class MailServiceIntTest {
         commentUser.setFirstName("Antoine");
         commentUser.setLastName("M");
         commentUser.setId(2l);
+        commentUser.setLangKey("fr");
         comment.setUser(commentUser);
         distribution.getUsers().add(user);
         distribution.getUsers().add(commentUser);
-        mailService.sendCommentEmail(comment, distribution);
+        mailService.sendCommentEmail(commentUser, comment, distribution);
         verify(javaMailSender).send(messageCaptor.capture());
         MimeMessage message = messageCaptor.getValue();
         assertThat(message.getAllRecipients().length).isEqualTo(1);

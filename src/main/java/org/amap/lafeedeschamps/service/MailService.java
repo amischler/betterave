@@ -136,19 +136,20 @@ public class MailService {
     /**
      * Publish a new comment by email to users.
      *
-     * @param comment
-     * @param distribution
+     * @param commentUser the user who commented the distribution
+     * @param comment the comment added to the distribution
+     * @param distribution the commented distribution
      */
     @Async
-    public void sendCommentEmail(Comment comment, Distribution distribution) {
-        for (User user : distribution.getUsers()) {
-            if (comment.getUser().getId() != user.getId()) {
-                log.debug("Sending comment email to {}", user);
-                Context context = createDefaultContext(user);
+    public void sendCommentEmail(User commentUser, Comment comment, Distribution distribution) {
+        for (User distributionUser : distribution.getUsers()) {
+            if (!commentUser.getId().equals(distributionUser.getId())) {
+                log.debug("Sending comment email to {}", distributionUser);
+                Context context = createDefaultContext(distributionUser);
                 context.setVariable(COMMENT, comment);
                 context.setVariable(DISTRIBUTION, distribution);
-                context.setVariable("commentUserName", UserUtil.formatFirstName(comment.getUser()));
-                sendEmailFromTemplate(user, "mail/commentEmail", "email.comment.title", context);
+                context.setVariable("commentUserName", UserUtil.formatFirstName(commentUser));
+                sendEmailFromTemplate(distributionUser, "mail/commentEmail", "email.comment.title", context);
             }
         }
     }
