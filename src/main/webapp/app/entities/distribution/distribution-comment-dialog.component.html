@@ -11,6 +11,9 @@
             <textarea class="form-control" name="text" id="field_text"
                       [(ngModel)]="comment.text" ></textarea>
         </div>
+        <div class="alert alert-info">
+            Votre commentaire apparaitra sur l'évènement et sera envoyé automatiquement par email aux amapiens déjà inscrits à cet évènement. Vous pourrez modifier ou supprimer votre commentaire en cliquant sur le titre de l'évènement concerné puis en utilisant les boutons à côté de votre commentaire.
+        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">

@@ -2,11 +2,11 @@
     <h2 id="page-heading">
         <span>Distributions et ateliers</span>
         <button *jhiHasAnyAuthority="'ROLE_ADMIN'" id="jh-create-entity"
-                class="btn btn-primary float-right jh-create-entity create-distribution"
+                class="btn btn-outline-primary float-right jh-create-entity create-distribution"
                 [routerLink]="['/distribution/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span>
-            Create new Distribution
+            Ajouter un évènement
             </span>
         </button>
     </h2>
@@ -45,50 +45,59 @@
         <div *ngFor="let distribution of distributions ;trackBy: trackId" class="card mt-2">
             <div class="card-header">
                 <h5>
-                    <a [routerLink]="['/distribution', distribution.id, 'view' ]"><span *jhiHasAnyAuthority="'ROLE_ADMIN'">{{distribution.id}} - </span>
-                        <fa-icon [icon]="getIconByType(distribution.type)"></fa-icon> {{distribution.startDate | date : 'd MMMM à HH:mm'}}
+                    <a [routerLink]="['/distribution', distribution.id, 'view' ]">
+                        <fa-icon [icon]="getIconByType(distribution.type)"></fa-icon>
+                        {{distribution.startDate | date : 'EEEE d MMMM, HH:mm'}} à {{distribution.endDate | date : 'HH:mm'}}
                     </a>
-                    <div class="btn-group float-sm-right">
-                        <button type="submit"
-                                *ngIf="canSubscribe(distribution)"
-                                (click)="subscribe(distribution.id)"
-                                class="btn btn-primary btn-sm">
-                            <fa-icon [icon]="'check'"></fa-icon>
-                            <span class="">S'inscrire</span>
-                        </button>
-                        <button type="submit"
-                                *ngIf="canUnsubscribe(distribution)"
-                                (click)="unsubscribe(distribution.id)"
-                                class="btn btn-secondary btn-sm">
-                            <fa-icon [icon]="'times'"></fa-icon>
-                            <span class="">Se désinscrire</span>
-                        </button>
-                        <button *jhiHasAnyAuthority="'ROLE_ADMIN'" type="submit"
-                                [routerLink]="['/distribution', distribution.id, 'edit']"
-                                class="btn btn-primary btn-sm">
-                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
-                            <span class="d-none d-md-inline">Editer</span>
-                        </button>
-                        <button *jhiHasAnyAuthority="'ROLE_ADMIN'" type="submit"
-                                [routerLink]="['/', 'distribution', { outlets: { popup: distribution.id + '/delete'} }]"
-                                replaceUrl="true"
-                                queryParamsHandling="merge"
-                                class="btn btn-danger btn-sm">
-                            <fa-icon [icon]="'times'"></fa-icon>
-                            <span class="d-none d-md-inline">Supprimer</span>
-                        </button>
-                        <button type="button"
-                                [routerLink]="['/', 'distribution', { outlets: { popup:  distribution.id + '/comment/new'} }]"
-                                skipLocationChange="true"
-                                queryParamsHandling="merge"
-                                type="submit"
-                                class="btn btn-light">
-                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
-                            <span class="d-none d-md-inline"> Commenter</span>
-                        </button>
+                    <div class="btn-toolbar float-sm-right" role="toolbar" aria-label="Actions">
+                        <div class="btn-group mr-2" role="group" aria-label="User group">
+                            <button type="submit"
+                                    *ngIf="canSubscribe(distribution)"
+                                    (click)="subscribe(distribution.id)"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon [icon]="'check'"></fa-icon>
+                                <span class="">S'inscrire</span>
+                            </button>
+                            <button type="submit"
+                                    *ngIf="canUnsubscribe(distribution)"
+                                    (click)="unsubscribe(distribution.id)"
+                                    class="btn btn-secondary btn-sm">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                                <span class="">Se désinscrire</span>
+                            </button>
+                            <button type="button"
+                                    [routerLink]="['/', 'distribution', { outlets: { popup:  distribution.id + '/comment/new'} }]"
+                                    skipLocationChange="true"
+                                    queryParamsHandling="merge"
+                                    type="submit"
+                                    class="btn btn-info">
+                                <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                                <span class="d-none d-md-inline">Commenter</span>
+                            </button>
+                        </div>
+                        <div *jhiHasAnyAuthority="'ROLE_ADMIN'" class="btn-group " role="group"
+                             aria-label="Admin group">
+                            <button type="submit"
+                                    [routerLink]="['/distribution', distribution.id, 'edit']"
+                                    class="btn btn-outline-primary btn-sm">
+                                <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                                <span class="d-none d-md-inline">Editer</span>
+                            </button>
+                            <button type="submit"
+                                    [routerLink]="['/', 'distribution', { outlets: { popup: distribution.id + '/delete'} }]"
+                                    replaceUrl="true"
+                                    queryParamsHandling="merge"
+                                    class="btn btn-outline-danger btn-sm">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                                <span class="d-none d-md-inline">Supprimer</span>
+                            </button>
+                        </div>
                     </div>
                 </h5>
-                <h6 class="card-subtitle mb-2 text-muted"><fa-icon [icon]="'map-marker-alt'"></fa-icon> {{distribution.placeName}}</h6>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    <fa-icon [icon]="'map-marker-alt'"></fa-icon>
+                    {{distribution.placeName}}
+                </h6>
             </div>
             <div class="card-body">
                 <p class="card-text">
@@ -98,16 +107,18 @@
                     <span *ngIf="!distribution.users.length">
                         Aucun inscrit
                     </span>
-                    <span [ngClass]="getMinRequiredClasses(distribution.users.length, distribution.minUsers)">{{distribution.users.length}}<span *ngIf="distribution.minUsers > 0">/{{distribution.minUsers}}</span> <fa-icon *ngIf="distribution.users.length == distribution.minUsers" [icon]="'check'"></fa-icon></span>
+                    <span [ngClass]="getMinRequiredClasses(distribution.users.length, distribution.minUsers)">{{distribution.users.length}}<span
+                        *ngIf="distribution.minUsers > 0">/{{distribution.minUsers}}</span> <fa-icon
+                        *ngIf="distribution.users.length == distribution.minUsers" [icon]="'check'"></fa-icon></span>
                 </p>
                 <p class="card-text">
                     {{preview(distribution.text, 100)}}
                 </p>
                 <p class="card-text">
-                    <div *ngFor="let comment of distribution.comments; let last = last"
-                         class="badge badge-pill badge-light">
-                        {{comment.user | accountFormat}} <span class="font-weight-light text-wrap text-left">{{comment.text}}</span>
-                    </div>
+                <div *ngFor="let comment of distribution.comments; let last = last"
+                     class="badge badge-pill badge-light">
+                    {{comment.user | accountFormat}} <span class="font-weight-light text-wrap text-left">{{comment.text}}</span>
+                </div>
                 </p>
             </div>
         </div>
