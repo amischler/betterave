@@ -3,6 +3,7 @@ package org.amap.lafeedeschamps.service;
 import io.github.jhipster.config.JHipsterProperties;
 import org.amap.lafeedeschamps.domain.Comment;
 import org.amap.lafeedeschamps.domain.Distribution;
+import org.amap.lafeedeschamps.domain.DistributionPlace;
 import org.amap.lafeedeschamps.domain.User;
 import org.amap.lafeedeschamps.service.util.UserUtil;
 import org.slf4j.Logger;
@@ -36,6 +37,8 @@ public class MailService {
     private static final String USER_NAME = "userName";
 
     private static final String DISTRIBUTION = "distribution";
+
+    private static final String DISTRIBUTION_PLACE = "distributionPlace";
 
     private static final String COMMENT = "comment";
 
@@ -125,10 +128,11 @@ public class MailService {
     }
 
     @Async
-    public void sendReminderEmail(User user, Distribution distribution) {
+    public void sendReminderEmail(User user, Distribution distribution, DistributionPlace distributionPlace) {
         log.debug("Sending reminder email to {}", user.getEmail());
         Context context = createDefaultContext(user);
         context.setVariable(DISTRIBUTION, distribution);
+        context.setVariable(DISTRIBUTION_PLACE, distributionPlace);
         context.setVariable(TIME_FORMAT, DateTimeFormatter.ofPattern("HH'h'mm").withZone(ZoneId.of("Europe/Paris")).withLocale(Locale.FRENCH));
         sendEmailFromTemplate(user, "mail/distributionReminderEmail", "email.reminder.title", context);
     }

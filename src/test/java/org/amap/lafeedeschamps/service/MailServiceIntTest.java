@@ -202,7 +202,7 @@ public class MailServiceIntTest {
         distributionPlace.setName("Wambrechies");
         distribution.setPlace(distributionPlace);
         distribution.setStartDate(LocalDateTime.of(2020, 02, 27, 7, 35).atZone(ZoneId.of("Europe/Paris")).toInstant());
-        mailService.sendReminderEmail(user, distribution);
+        mailService.sendReminderEmail(user, distribution, distributionPlace);
         verify(javaMailSender).send(messageCaptor.capture());
         MimeMessage message = messageCaptor.getValue();
         assertThat(message.getAllRecipients()[0].toString()).isEqualTo(user.getEmail());
@@ -225,7 +225,7 @@ public class MailServiceIntTest {
         distributionPlace.setName("Lille");
         distribution.setPlace(distributionPlace);
         distribution.setStartDate(LocalDateTime.of(2020, 02, 27, 7, 35).atZone(ZoneId.of("Europe/Paris")).toInstant());
-        mailService.sendReminderEmail(user, distribution);
+        mailService.sendReminderEmail(user, distribution, distributionPlace);
         verify(javaMailSender).send(messageCaptor.capture());
         MimeMessage message = messageCaptor.getValue();
         assertThat(message.getAllRecipients()[0].toString()).isEqualTo(user.getEmail());

@@ -12,13 +12,14 @@
 <p th:text="#{email.reminder.text1}">
     Petit rappel automatique, tu t'es inscrit(e) demain :
 </p>
-<p th:text="#{email.reminder.text2(${timeFormat.format(distribution.startDate)}, ${distribution.type.displayText}, ${distribution.place.name})}">
+<p th:text="#{email.reminder.text2(${timeFormat.format(distribution.startDate)}, ${distribution.type.displayText}, ${distributionPlace.name})}">
     Atelier à 9h
 </p>
 <p>
     <a th:with="url=(@{|${baseUrl}/#/distribution/${distribution.id}/view|})" th:href="${url}"
        th:text="Détails">Détails</a>
 </p>
+<p th:text="#{email.reminder.text4}">Attention, pour les distributions, pense à arriver quinze minutes en avance pour le déchargement du camion et l'installation.</p>
 <p>
     <span th:text="#{email.reminder.text3}">A bientôt</span>
     <br/>
