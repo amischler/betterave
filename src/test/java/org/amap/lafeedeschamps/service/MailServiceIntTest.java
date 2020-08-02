@@ -209,7 +209,7 @@ public class MailServiceIntTest {
         assertThat(message.getFrom()[0].toString()).isEqualTo("test@localhost");
         assertThat(message.getContent().toString()).isNotEmpty();
         assertThat(message.getContent()).asString().contains("Atelier à 07h35 - Wambrechies");
-        assertThat(message.getContent()).asString().contains("[AMAP La Fée des champs] Rappel : Atelier");
+        assertThat(message.getContent()).asString().contains("[AMAP La Fée des champs] Rappel inscription");
         assertThat(message.getDataHandler().getContentType()).isEqualTo("text/html;charset=UTF-8");
     }
 
@@ -232,7 +232,7 @@ public class MailServiceIntTest {
         assertThat(message.getFrom()[0].toString()).isEqualTo("test@localhost");
         assertThat(message.getContent().toString()).isNotEmpty();
         assertThat(message.getContent()).asString().contains("Distribution à 07h35 - Lille");
-        assertThat(message.getContent()).asString().contains("[AMAP La Fée des champs] Rappel : Distribution");
+        assertThat(message.getContent()).asString().contains("[AMAP La Fée des champs] Rappel inscription");
         assertThat(message.getDataHandler().getContentType()).isEqualTo("text/html;charset=UTF-8");
     }
 
