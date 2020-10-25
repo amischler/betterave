@@ -1,5 +1,6 @@
 package org.amap.lafeedeschamps.scheduled;
 
+import org.amap.lafeedeschamps.repository.UserRepository;
 import org.amap.lafeedeschamps.service.DistributionPlaceService;
 import org.amap.lafeedeschamps.service.DistributionService;
 import org.amap.lafeedeschamps.service.MailService;
@@ -36,18 +37,22 @@ public class MailTask {
 
     private final DistributionPlaceMapper distributionPlaceMapper;
 
+    private final UserRepository userRepository;
+
     public MailTask(DistributionService distributionService,
                     MailService mailService,
                     UserMapper userMapper,
                     DistributionMapper distributionMapper,
                     DistributionPlaceService distributionPlaceService,
-                    DistributionPlaceMapper distributionPlaceMapper) {
+                    DistributionPlaceMapper distributionPlaceMapper,
+                    UserRepository userRepository) {
         this.distributionService = distributionService;
         this.mailService = mailService;
         this.userMapper = userMapper;
         this.distributionMapper = distributionMapper;
         this.distributionPlaceService = distributionPlaceService;
         this.distributionPlaceMapper = distributionPlaceMapper;
+        this.userRepository = userRepository;
     }
 
     @Scheduled(cron = "0 0 12 * * *")
@@ -63,6 +68,23 @@ public class MailTask {
                 distributionMapper.toEntity(distributionDTO),
                 distributionPlaceMapper.toEntity(distributionPlaceService.findOne(distributionDTO.getPlaceId()).get()));
         }));
+    }
+
+    @Scheduled(cron = "0 0 12 * * *")
+    public void sendMissingParticipantsAlertToAdmin() {
+        log.info("Sending alert email for missing participants to admin about tomorrow distributions");
+        LocalDate now = LocalDate.now();
+        List<DistributionDTO> distributions = distributionService.findByDates(
+            now.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant(),
+            now.plusDays(2).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        log.info("There is {} distributions tomorrow", distributions.size());
+        distributions.forEach(distributionDTO -> {
+            if (distributionDTO.getMinUsers() > distributionDTO.getUsers().size()) {
+                userRepository.findAllByAuthorities_Name("ROLE_ADMIN") .forEach(userDTO -> {
+                    mailService.sendMissingParticipantsAlertEmailToAdmin(userDTO, distributionMapper.toEntity(distributionDTO));
+                });
+            }
+        });
     }
 
 }

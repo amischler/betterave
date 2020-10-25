@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{email.missing.participants.title}">Il manque des participants</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="shortcut icon" th:href="@{|${baseUrl}/favicon.ico|}"/>
+</head>
+<body>
+<p th:text="#{email.greeting(${userName})}">
+    Bonjour login,
+</p>
+<p th:text="#{email.missing.participants.text1}">
+    Attention, il semble manquer des participants pour l'évènement suivant :
+</p>
+<p th:text="#{email.missing.participants.text2(${timeFormat.format(distribution.startDate)}, ${distribution.type.displayText})}">
+    Atelier à 9h
+</p>
+<p>
+    <a th:with="url=(@{|${baseUrl}/#/distribution/${distribution.id}/view|})" th:href="${url}"
+       th:text="Détails">Détails</a>
+</p>
+<p th:text="#{email.missing.participants.text3}">Ce message a été envoyé automatiquement aux administrateurs du site uniquement.</p>
+<p>
+    <br/>
+    <em th:text="#{email.signature}">L'équipe de l'AMAP.</em>
+</p>
+</body>
+</html>

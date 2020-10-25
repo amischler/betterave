@@ -158,4 +158,12 @@ public class MailService {
         }
     }
 
+    @Async
+    public void sendMissingParticipantsAlertEmailToAdmin(User user, Distribution distribution) {
+        log.debug("Sending missing participants email to admin {}", user);
+        Context context = createDefaultContext(user);
+        context.setVariable(DISTRIBUTION, distribution);
+        context.setVariable(TIME_FORMAT, DateTimeFormatter.ofPattern("HH'h'mm").withZone(ZoneId.of("Europe/Paris")).withLocale(Locale.FRENCH));
+        sendEmailFromTemplate(user, "mail/missingParticipantsAlertEmail", "email.missing.participants.title", context);
+    }
 }
